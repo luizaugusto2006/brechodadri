@@ -1,12 +1,17 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, session, redirect, url_for
 import os
 import json
+import secrets
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
+app.secret_key = secrets.token_hex(32)
 
 IMAGES_DIR = os.path.join(BASE_DIR, 'static', 'imagem')
 PRODUTOS_FILE = os.path.join(BASE_DIR, 'produtos.json')
+
+ADMIN_USER = "admin"
+ADMIN_PASS = "brechodadri2026"
 
 def load_produtos():
     with open(PRODUTOS_FILE, 'r', encoding='utf-8') as f:
@@ -15,6 +20,15 @@ def load_produtos():
 def save_produtos(data):
     with open(PRODUTOS_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+def login_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('logged_in'):
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.route('/')
 def index():
@@ -33,7 +47,27 @@ def produto(product_id):
     subcategorias = data.get('subcategorias', {})
     return render_template('produto.html', product=product, categorias=categorias, subcategorias=subcategorias)
 
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        
+        if username == ADMIN_USER and password == ADMIN_PASS:
+            session['logged_in'] = True
+            return redirect(url_for('admin'))
+        else:
+            return render_template('login.html', error='Usuário ou senha inválidos')
+    
+    return render_template('login.html', error=None)
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('index'))
+
 @app.route('/admin')
+@login_required
 def admin():
     data = load_produtos()
     categorias = data['categorias']
@@ -44,6 +78,7 @@ def admin():
                          produtos=produtos, subcategorias=subcategorias)
 
 @app.route('/admin/salvar-categorias', methods=['POST'])
+@login_required
 def salvar_categorias():
     data = load_produtos()
     categorias_ativas = request.json.get('categorias', [])
@@ -55,6 +90,7 @@ def salvar_categorias():
     return jsonify({'success': True})
 
 @app.route('/admin/salvar-produtos', methods=['POST'])
+@login_required
 def salvar_produtos():
     data = load_produtos()
     produtos_atualizados = request.json.get('produtos', {})
