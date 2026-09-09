@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ product.nome }} - Brechó da Adri{% endblock %}
+
+{% block content %}
+<section class="product-detail">
+    <div class="product-detail-container">
+        <div class="product-detail-image">
+            <img src="{{ product.imagem }}" alt="{{ product.nome }}">
+        </div>
+        <div class="product-detail-info">
+            <span class="category-tag">{{ product.categoria }}</span>
+            <h1>{{ product.nome }}</h1>
+            <p class="price">{{ product.preco }}</p>
+            <p class="description">{{ product.descricao }}</p>
+            
+            <div class="sizes-section">
+                <h3>Tamanhos Disponíveis</h3>
+                <div class="sizes">
+                    {% for tamanho in product.tamandos %}
+                    <span class="size">{{ tamanho }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <a href="https://wa.me/55XXXXXXXXXXX?text=Olá! Tenho interesse na peça {{ product.nome }}" class="btn btn-whatsapp" target="_blank">
+                    Comprar no WhatsApp
+                </a>
+                <a href="/" class="btn btn-secondary">Voltar</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

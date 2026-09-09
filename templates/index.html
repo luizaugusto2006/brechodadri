@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+    <div class="hero-content">
+        <h1>Brechó da Adri</h1>
+        <p>Roupas de segunda mão com estilo e qualidade</p>
+        <a href="#produtos" class="btn">Ver Coleção</a>
+    </div>
+</section>
+
+<section class="featured" id="produtos">
+    <h2>Nossas Peças</h2>
+    <div class="filter-buttons">
+        <button class="filter-btn active" data-filter="all">Todos</button>
+        <button class="filter-btn" data-filter="Vestidos">Vestidos</button>
+        <button class="filter-btn" data-filter="Camisas">Camisas</button>
+        <button class="filter-btn" data-filter="Calças">Calças</button>
+        <button class="filter-btn" data-filter="Saias">Saias</button>
+        <button class="filter-btn" data-filter="Blusas">Blusas</button>
+        <button class="filter-btn" data-filter="Jaquetas">Jaquetas</button>
+    </div>
+    <div class="products-grid">
+        {% for product in products %}
+        <div class="product-card" data-category="{{ product.categoria }}">
+            <a href="/produto/{{ product.id }}">
+                <div class="product-image">
+                    <img src="{{ product.imagem }}" alt="{{ product.nome }}">
+                    <span class="category-tag">{{ product.categoria }}</span>
+                </div>
+                <div class="product-info">
+                    <h3>{{ product.nome }}</h3>
+                    <p class="price">{{ product.preco }}</p>
+                    <div class="sizes">
+                        {% for tamanho in product.tamanhos %}
+                        <span class="size">{{ tamanho }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="about" id="sobre">
+    <div class="about-content">
+        <h2>Sobre Nós</h2>
+        <p>O Brechó da Adri é um espaço dedicado a roupas de segunda mão cuidadosamente selecionadas. Acreditamos que moda sustentável pode ser bonita e acessível. Cada peça é revisada e preparada para ganhar uma nova vida com você!</p>
+        <div class="features">
+            <div class="feature">
+                <h3>Qualidade</h3>
+                <p>Peças revisadas e em ótimo estado</p>
+            </div>
+            <div class="feature">
+                <h3>Preço Justo</h3>
+                <p>Moda acessível para todos</p>
+            </div>
+            <div class="feature">
+                <h3>Sustentabilidade</h3>
+                <p>Contribuindo para um mundo melhor</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact" id="contato">
+    <h2>Entre em Contato</h2>
+    <div class="contact-info">
+        <p><strong>WhatsApp:</strong> (XX) XXXXX-XXXX</p>
+        <p><strong>Instagram:</strong> @brechodadri</p>
+        <p><strong>E-mail:</strong> contato@brechodadri.com</p>
+    </div>
+</section>
+{% endblock %}

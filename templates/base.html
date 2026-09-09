@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Brechó da Adri{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">
+                <a href="/">Brechó da Adri</a>
+            </div>
+            <div class="nav-links">
+                <a href="/">Início</a>
+                <a href="#produtos">Produtos</a>
+                <a href="#sobre">Sobre</a>
+                <a href="#contato">Contato</a>
+            </div>
+            <div class="menu-toggle" id="menu-toggle">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Brechó da Adri</h3>
+                <p>Roupas de segunda mão com estilo e qualidade.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Contato</h3>
+                <p>WhatsApp: (XX) XXXXX-XXXX</p>
+                <p>Instagram: @brechodadri</p>
+            </div>
+            <div class="footer-section">
+                <h3>Horário</h3>
+                <p>Seg - Sex: 9h às 18h</p>
+                <p>Sáb: 9h às 14h</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Brechó da Adri. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
