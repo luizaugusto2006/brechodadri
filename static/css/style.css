@@ -429,10 +429,14 @@ nav {
     padding: 5rem 2rem;
     text-align: center;
     background: linear-gradient(135deg, #fce4ec 0%, #fdf6f9 100%);
+    position: relative;
+    z-index: 1;
 }
 
 .contact h2 {
     margin-bottom: 2rem;
+    position: relative;
+    z-index: 2;
 }
 
 .contact-info {
@@ -443,6 +447,8 @@ nav {
     box-shadow: 0 10px 30px rgba(233, 30, 99, 0.1);
     border: 2px solid #f8bbd9;
     margin-top: 1rem;
+    position: relative;
+    z-index: 1;
 }
 
 .contact-info p {
