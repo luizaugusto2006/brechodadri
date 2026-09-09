@@ -20,7 +20,7 @@
         <div class="admin-content">
             <section class="admin-section">
                 <h2>Gerenciar Categorias</h2>
-                <p class="section-info">Selecione as categorias que aparecerão no site.</p>
+                <p class="section-info">Selecione as categorias que aparecerão no site. Use o botão × para remover.</p>
                 
                 <form id="categoriasForm">
                     <div class="categorias-grid">
@@ -35,6 +35,7 @@
                                     <span class="cat-nome">{{ cat.nome }}</span>
                                 </span>
                             </label>
+                            <button type="button" class="btn-remove-cat" data-id="{{ cat.id }}" data-nome="{{ cat.nome }}">×</button>
                         </div>
                         {% endfor %}
                     </div>

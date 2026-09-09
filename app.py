@@ -169,6 +169,22 @@ def remover_subcategoria():
     save_produtos(data)
     return jsonify({'success': True})
 
+@app.route('/admin/remover-categoria', methods=['POST'])
+@login_required
+def remover_categoria():
+    data = load_produtos()
+    cat_id = request.json.get('id')
+    
+    data['categorias'] = [cat for cat in data['categorias'] if cat['id'] != cat_id]
+    
+    if 'subcategorias' in data:
+        cat_nome = next((cat['nome'] for cat in data['categorias'] if cat['id'] == cat_id), None)
+        if cat_nome and cat_nome in data['subcategorias']:
+            del data['subcategorias'][cat_nome]
+    
+    save_produtos(data)
+    return jsonify({'success': True})
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

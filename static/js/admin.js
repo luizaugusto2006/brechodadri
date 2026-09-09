@@ -207,6 +207,36 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Botões de remover categoria
+    document.querySelectorAll('.btn-remove-cat').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const catId = parseInt(this.getAttribute('data-id'));
+            const catNome = this.getAttribute('data-nome');
+
+            if (confirm(`Remover a categoria "${catNome}"? Todos os produtos dessa categoria serão afetados!`)) {
+                fetch('/admin/remover-categoria', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ id: catId })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Erro ao remover categoria.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao remover categoria.');
+                });
+            }
+        });
+    });
+
     // Formulário de produtos
     document.getElementById('produtosForm').addEventListener('submit', function(e) {
         e.preventDefault();

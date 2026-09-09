@@ -68,11 +68,31 @@ body {
     padding: 15px;
     border-radius: 10px;
     transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .categoria-card:hover {
     background: #f8bbd9;
     transform: translateY(-2px);
+}
+
+.btn-remove-cat {
+    background: none;
+    border: none;
+    color: #c2185b;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 5px;
+    transition: color 0.3s;
+    opacity: 0.6;
+}
+
+.btn-remove-cat:hover {
+    color: #880e4f;
+    opacity: 1;
 }
 
 .checkbox-container {
