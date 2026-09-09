@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - Brechó da Adri</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>Painel Administrativo</h1>
+            <a href="/" class="btn btn-secondary">Ver Site</a>
+        </header>
+
+        <div class="admin-content">
+            <section class="admin-section">
+                <h2>Gerenciar Categorias</h2>
+                <p class="section-info">Selecione as categorias que aparecerão no site. Cada produto pode pertencer a múltiplas categorias.</p>
+                
+                <form id="categoriasForm">
+                    <div class="categorias-grid">
+                        {% for cat in categorias %}
+                        <div class="categoria-card">
+                            <label class="checkbox-container">
+                                <input type="checkbox" name="categorias" value="{{ cat.id }}" 
+                                       {% if cat.id in categorias_ativas %}checked{% endif %}>
+                                <span class="checkmark"></span>
+                                <span class="cat-info">
+                                    <span class="cat-emoji">{{ cat.emoji }}</span>
+                                    <span class="cat-nome">{{ cat.nome }}</span>
+                                </span>
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Salvar Categorias</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="admin-section">
+                <h2>Gerenciar Produtos</h2>
+                <p class="section-info">Edite as categorias, subcategorias e preços de cada produto.</p>
+                
+                <div class="filters">
+                    <input type="text" id="searchInput" placeholder="Buscar produto..." class="search-input">
+                    <select id="filterCategoria" class="filter-select">
+                        <option value="all">Todas as categorias</option>
+                        {% for cat in categorias %}
+                        <option value="{{ cat.id }}">{{ cat.emoji }} {{ cat.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <form id="produtosForm">
+                    <div class="produtos-list">
+                        {% for produto in produtos %}
+                        <div class="produto-item" data-categoria="{{ produto.categoria_id }}">
+                            <div class="produto-image">
+                                <img src="/static/imagem/{{ produto.imagem }}" alt="{{ produto.nome }}">
+                            </div>
+                            <div class="produto-info">
+                                <h3>{{ produto.nome }}</h3>
+                                <p class="produto-preco-atual">Preço atual: R$ {{ "%.2f"|format(produto.preco) }}</p>
+                            </div>
+                            <div class="produto-form">
+                                <div class="form-group">
+                                    <label>Categoria:</label>
+                                    <select name="produto_{{ produto.id }}_categoria" class="form-control">
+                                        {% for cat in categorias %}
+                                        <option value="{{ cat.id }}" {% if produto.categoria_id == cat.id %}selected{% endif %}>
+                                            {{ cat.emoji }} {{ cat.nome }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Subcategoria:</label>
+                                    <select name="produto_{{ produto.id }}_subcategoria" class="form-control">
+                                        <option value="">Selecione...</option>
+                                        {% for sub in subcategorias.get(categorias[produto.categoria_id - 1].nome, []) %}
+                                        <option value="{{ sub }}" {% if produto.subcategoria == sub %}selected{% endif %}>
+                                            {{ sub }}
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Preço (R$):</label>
+                                    <input type="number" name="produto_{{ produto.id }}_preco" 
+                                           value="{{ produto.preco }}" step="0.01" min="0" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Tamanhos:</label>
+                                    <div class="tamanhos-checkbox">
+                                        {% for tamanho in ['P', 'M', 'G', 'GG'] %}
+                                        <label class="tamanho-label">
+                                            <input type="checkbox" name="produto_{{ produto.id }}_tamanhos" 
+                                                   value="{{ tamanho }}" {% if tamanho in produto.tamanhos %}checked{% endif %}>
+                                            {{ tamanho }}
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Salvar Todos os Produtos</button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/admin.js') }}"></script>
+</body>
+</html>

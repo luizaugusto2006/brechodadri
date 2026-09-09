@@ -13,24 +13,23 @@
     <h2>Nossas Peças</h2>
     <div class="filter-buttons">
         <button class="filter-btn active" data-filter="all">Todos</button>
-        <button class="filter-btn" data-filter="Vestidos">Vestidos</button>
-        <button class="filter-btn" data-filter="Camisas">Camisas</button>
-        <button class="filter-btn" data-filter="Calças">Calças</button>
-        <button class="filter-btn" data-filter="Saias">Saias</button>
-        <button class="filter-btn" data-filter="Blusas">Blusas</button>
-        <button class="filter-btn" data-filter="Jaquetas">Jaquetas</button>
+        {% for cat in categorias %}
+        {% if cat.get('ativa', True) %}
+        <button class="filter-btn" data-filter="{{ cat.id }}">{{ cat.emoji }} {{ cat.nome }}</button>
+        {% endif %}
+        {% endfor %}
     </div>
     <div class="products-grid">
         {% for product in products %}
-        <div class="product-card" data-category="{{ product.categoria }}">
+        <div class="product-card" data-category="{{ product.categoria_id }}">
             <a href="/produto/{{ product.id }}">
                 <div class="product-image">
-                    <img src="{{ product.imagem }}" alt="{{ product.nome }}">
-                    <span class="category-tag">{{ product.categoria }}</span>
+                    <img src="/static/imagem/{{ product.imagem }}" alt="{{ product.nome }}">
+                    <span class="category-tag">{{ product.subcategoria }}</span>
                 </div>
                 <div class="product-info">
                     <h3>{{ product.nome }}</h3>
-                    <p class="price">{{ product.preco }}</p>
+                    <p class="price">R$ {{ "%.2f"|format(product.preco) }}</p>
                     <div class="sizes">
                         {% for tamanho in product.tamanhos %}
                         <span class="size">{{ tamanho }}</span>

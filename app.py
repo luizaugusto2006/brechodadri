@@ -1,42 +1,79 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 import os
-import random
+import json
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 
 IMAGES_DIR = os.path.join(BASE_DIR, 'static', 'imagem')
+PRODUTOS_FILE = os.path.join(BASE_DIR, 'produtos.json')
 
-def get_products():
-    products = []
-    images = sorted([f for f in os.listdir(IMAGES_DIR) if f.endswith(('.webp', '.jpeg', '.jpg', '.png'))])
-    
-    categories = ['Calças', 'Calças', 'Vestidos', 'Camisas', 'Saias', 'Blusas', 'Jaquetas', 'Outros']
-    
-    for i, img in enumerate(images, 1):
-        products.append({
-            'id': i,
-            'nome': f'Roupa {i:02d}',
-            'imagem': f'/static/imagem/{img}',
-            'preco': f'R$ {random.randint(15, 89)},{random.randint(0, 9):02d}',
-            'categoria': categories[i % len(categories)],
-            'tamanhos': random.sample(['P', 'M', 'G', 'GG'], k=random.randint(2, 4)),
-            'descricao': f'Peça única em ótimo estado. Encontre outras peças incríveis no Brechó da Adri!'
-        })
-    return products
+def load_produtos():
+    with open(PRODUTOS_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def save_produtos(data):
+    with open(PRODUTOS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 @app.route('/')
 def index():
-    products = get_products()
-    return render_template('index.html', products=products)
+    data = load_produtos()
+    categorias_ativas = [cat['id'] for cat in data['categorias'] if cat.get('ativa', True)]
+    produtos = [p for p in data['produtos'] if p['categoria_id'] in categorias_ativas]
+    return render_template('index.html', products=produtos, categorias=data['categorias'])
 
 @app.route('/produto/<int:product_id>')
 def produto(product_id):
-    products = get_products()
-    product = next((p for p in products if p['id'] == product_id), None)
+    data = load_produtos()
+    product = next((p for p in data['produtos'] if p['id'] == product_id), None)
     if product is None:
         return render_template('404.html'), 404
-    return render_template('produto.html', product=product)
+    categorias = data['categorias']
+    subcategorias = data.get('subcategorias', {})
+    return render_template('produto.html', product=product, categorias=categorias, subcategorias=subcategorias)
+
+@app.route('/admin')
+def admin():
+    data = load_produtos()
+    categorias = data['categorias']
+    categorias_ativas = [cat['id'] for cat in categorias if cat.get('ativa', True)]
+    produtos = data['produtos']
+    subcategorias = data.get('subcategorias', {})
+    return render_template('admin.html', categorias=categorias, categorias_ativas=categorias_ativas, 
+                         produtos=produtos, subcategorias=subcategorias)
+
+@app.route('/admin/salvar-categorias', methods=['POST'])
+def salvar_categorias():
+    data = load_produtos()
+    categorias_ativas = request.json.get('categorias', [])
+    
+    for cat in data['categorias']:
+        cat['ativa'] = str(cat['id']) in categorias_ativas
+    
+    save_produtos(data)
+    return jsonify({'success': True})
+
+@app.route('/admin/salvar-produtos', methods=['POST'])
+def salvar_produtos():
+    data = load_produtos()
+    produtos_atualizados = request.json.get('produtos', {})
+    
+    for produto in data['produtos']:
+        produto_id = str(produto['id'])
+        if produto_id in produtos_atualizados:
+            updates = produtos_atualizados[produto_id]
+            if 'categoria' in updates:
+                produto['categoria_id'] = int(updates['categoria'])
+            if 'subcategoria' in updates:
+                produto['subcategoria'] = updates['subcategoria']
+            if 'preco' in updates:
+                produto['preco'] = updates['preco']
+            if 'tamanhos' in updates:
+                produto['tamanhos'] = updates['tamanhos']
+    
+    save_produtos(data)
+    return jsonify({'success': True})
 
 @app.errorhandler(404)
 def page_not_found(e):
