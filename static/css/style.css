@@ -149,10 +149,6 @@ nav {
     font-size: 2.2rem;
     margin-bottom: 2rem;
     color: #c2185b;
-    position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .featured h2::after, .about h2::after, .contact h2::after {
