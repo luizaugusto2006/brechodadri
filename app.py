@@ -2,9 +2,10 @@ from flask import Flask, render_template, jsonify
 import os
 import random
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
 
-IMAGES_DIR = os.path.join('static', 'imagem')
+IMAGES_DIR = os.path.join(BASE_DIR, 'static', 'imagem')
 
 def get_products():
     products = []
