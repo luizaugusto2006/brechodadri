@@ -11,13 +11,16 @@
     <div class="admin-container">
         <header class="admin-header">
             <h1>Painel Administrativo</h1>
-            <a href="/" class="btn btn-secondary">Ver Site</a>
+            <div class="header-buttons">
+                <a href="/" class="btn btn-secondary">Ver Site</a>
+                <a href="/logout" class="btn btn-outline">Sair</a>
+            </div>
         </header>
 
         <div class="admin-content">
             <section class="admin-section">
                 <h2>Gerenciar Categorias</h2>
-                <p class="section-info">Selecione as categorias que aparecerão no site. Cada produto pode pertencer a múltiplas categorias.</p>
+                <p class="section-info">Selecione as categorias que aparecerão no site.</p>
                 
                 <form id="categoriasForm">
                     <div class="categorias-grid">
@@ -40,6 +43,71 @@
                         <button type="submit" class="btn btn-primary">Salvar Categorias</button>
                     </div>
                 </form>
+            </section>
+
+            <section class="admin-section">
+                <h2>Adicionar Nova Categoria</h2>
+                <p class="section-info">Crie uma nova categoria para organizar seus produtos.</p>
+                
+                <form id="novaCategoriaForm" class="inline-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome da Categoria</label>
+                            <input type="text" name="nome" placeholder="Ex: Calças Jeans" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Emoji</label>
+                            <input type="text" name="emoji" placeholder="Ex: 👖" required class="form-control emoji-input">
+                        </div>
+                        <div class="form-group form-group-btn">
+                            <button type="submit" class="btn btn-success">+ Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+            </section>
+
+            <section class="admin-section">
+                <h2>Gerenciar Subcategorias</h2>
+                <p class="section-info">Adicione subcategorias para organizar melhor seus produtos.</p>
+                
+                <form id="novaSubcategoriaForm" class="inline-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Categoria Pai</label>
+                            <select name="categoria_pai" required class="form-control">
+                                <option value="">Selecione...</option>
+                                {% for cat in categorias %}
+                                <option value="{{ cat.nome }}">{{ cat.emoji }} {{ cat.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nome da Subcategoria</label>
+                            <input type="text" name="nome" placeholder="Ex: Calça Mom" required class="form-control">
+                        </div>
+                        <div class="form-group form-group-btn">
+                            <button type="submit" class="btn btn-success">+ Adicionar</button>
+                        </div>
+                    </div>
+                </form>
+                
+                <div class="subcategorias-list">
+                    {% for cat_nome, subs in subcategorias.items() %}
+                    {% if subs %}
+                    <div class="subcategoria-group">
+                        <h4>{{ cat_nome }}</h4>
+                        <div class="subcategoria-tags">
+                            {% for sub in subs %}
+                            <span class="subcategoria-tag">
+                                {{ sub }}
+                                <button type="button" class="btn-remove" data-categoria="{{ cat_nome }}" data-sub="{{ sub }}">×</button>
+                            </span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
             </section>
 
             <section class="admin-section">

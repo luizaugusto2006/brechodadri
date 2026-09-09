@@ -111,6 +111,64 @@ def salvar_produtos():
     save_produtos(data)
     return jsonify({'success': True})
 
+@app.route('/admin/adicionar-categoria', methods=['POST'])
+@login_required
+def adicionar_categoria():
+    data = load_produtos()
+    nome = request.json.get('nome')
+    emoji = request.json.get('emoji')
+    
+    if not nome or not emoji:
+        return jsonify({'success': False, 'error': 'Nome e emoji são obrigatórios'})
+    
+    novo_id = max([cat['id'] for cat in data['categorias']], default=0) + 1
+    
+    data['categorias'].append({
+        'id': novo_id,
+        'nome': nome,
+        'emoji': emoji,
+        'ativa': True
+    })
+    
+    save_produtos(data)
+    return jsonify({'success': True, 'id': novo_id})
+
+@app.route('/admin/adicionar-subcategoria', methods=['POST'])
+@login_required
+def adicionar_subcategoria():
+    data = load_produtos()
+    categoria_pai = request.json.get('categoria_pai')
+    nome = request.json.get('nome')
+    
+    if not categoria_pai or not nome:
+        return jsonify({'success': False, 'error': 'Categoria e nome são obrigatórios'})
+    
+    if 'subcategorias' not in data:
+        data['subcategorias'] = {}
+    
+    if categoria_pai not in data['subcategorias']:
+        data['subcategorias'][categoria_pai] = []
+    
+    if nome not in data['subcategorias'][categoria_pai]:
+        data['subcategorias'][categoria_pai].append(nome)
+    
+    save_produtos(data)
+    return jsonify({'success': True})
+
+@app.route('/admin/remover-subcategoria', methods=['POST'])
+@login_required
+def remover_subcategoria():
+    data = load_produtos()
+    categoria_pai = request.json.get('categoria_pai')
+    nome = request.json.get('nome')
+    
+    if categoria_pai in data.get('subcategorias', {}):
+        if nome in data['subcategorias'][categoria_pai]:
+            data['subcategorias'][categoria_pai].remove(nome)
+    
+    save_produtos(data)
+    return jsonify({'success': True})
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404

@@ -96,6 +96,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Formulário de nova categoria
+    document.getElementById('novaCategoriaForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const nome = formData.get('nome');
+        const emoji = formData.get('emoji');
+
+        fetch('/admin/adicionar-categoria', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nome: nome, emoji: emoji })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Categoria adicionada com sucesso!');
+                location.reload();
+            } else {
+                alert(data.error || 'Erro ao adicionar categoria.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao adicionar categoria.');
+        });
+    });
+
+    // Formulário de nova subcategoria
+    document.getElementById('novaSubcategoriaForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        const categoriaPai = formData.get('categoria_pai');
+        const nome = formData.get('nome');
+
+        fetch('/admin/adicionar-subcategoria', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ categoria_pai: categoriaPai, nome: nome })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Subcategoria adicionada com sucesso!');
+                location.reload();
+            } else {
+                alert(data.error || 'Erro ao adicionar subcategoria.');
+            }
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert('Erro ao adicionar subcategoria.');
+        });
+    });
+
+    // Botões de remover subcategoria
+    document.querySelectorAll('.btn-remove').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const categoriaPai = this.getAttribute('data-categoria');
+            const nome = this.getAttribute('data-sub');
+
+            if (confirm(`Remover "${nome}" de "${categoriaPai}"?`)) {
+                fetch('/admin/remover-subcategoria', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ categoria_pai: categoriaPai, nome: nome })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload();
+                    } else {
+                        alert('Erro ao remover subcategoria.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    alert('Erro ao remover subcategoria.');
+                });
+            }
+        });
+    });
+
     // Formulário de produtos
     document.getElementById('produtosForm').addEventListener('submit', function(e) {
         e.preventDefault();

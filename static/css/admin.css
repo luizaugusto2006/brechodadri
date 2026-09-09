@@ -398,3 +398,114 @@ body {
 .login-footer a:hover {
     color: #e91e63;
 }
+
+/* Novos estilos */
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-outline {
+    background: transparent;
+    color: white;
+    border: 2px solid white;
+}
+
+.btn-outline:hover {
+    background: white;
+    color: #e91e63;
+}
+
+.inline-form {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+}
+
+.form-row .form-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.form-group-btn {
+    flex: 0 0 auto;
+}
+
+.emoji-input {
+    max-width: 100px;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #4caf50 0%, #388e3c 100%);
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+}
+
+.subcategorias-list {
+    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.subcategoria-group {
+    background: #fafafa;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #eee;
+}
+
+.subcategoria-group h4 {
+    color: #c2185b;
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.subcategoria-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.subcategoria-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fce4ec;
+    color: #c2185b;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: #c2185b;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.btn-remove:hover {
+    color: #880e4f;
+}
