@@ -1,4 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
+    // Seletor de emojis
+    const emojiInput = document.getElementById('emojiInput');
+    const emojiPicker = document.getElementById('emojiPicker');
+    
+    if (emojiInput && emojiPicker) {
+        emojiInput.addEventListener('click', function() {
+            emojiPicker.classList.toggle('active');
+        });
+        
+        document.querySelectorAll('.emoji-option').forEach(option => {
+            option.addEventListener('click', function() {
+                emojiInput.value = this.getAttribute('data-emoji');
+                emojiPicker.classList.remove('active');
+            });
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!emojiInput.contains(e.target) && !emojiPicker.contains(e.target)) {
+                emojiPicker.classList.remove('active');
+            }
+        });
+    }
+
     // Filtro de busca
     const searchInput = document.getElementById('searchInput');
     const filterCategoria = document.getElementById('filterCategoria');
