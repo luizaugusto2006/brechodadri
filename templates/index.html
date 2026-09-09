@@ -4,7 +4,13 @@
 <section class="hero">
     <div class="hero-content">
         <h1>Brechó da Adri</h1>
+        {% if genero == 'feminino' %}
+        <p>Roupas femininas com estilo e qualidade</p>
+        {% elif genero == 'masculino' %}
+        <p>Roupas masculinas com estilo e qualidade</p>
+        {% else %}
         <p>Roupas de segunda mão com estilo e qualidade</p>
+        {% endif %}
         <a href="#produtos" class="btn">Ver Coleção</a>
     </div>
 </section>
@@ -26,6 +32,12 @@
                 <div class="product-image">
                     <img src="/static/imagem/{{ product.imagem }}" alt="{{ product.nome }}">
                     <span class="category-tag">{{ product.subcategoria }}</span>
+                    <span class="genero-tag {% if product.genero == 'masculino' %}masculino{% elif product.genero == 'feminino' %}feminino{% else %}unissex{% endif %}">
+                        {% if product.genero == 'masculino' %}👔 Masculino
+                        {% elif product.genero == 'feminino' %}👗 Feminino
+                        {% else %}⚧ Unissex
+                        {% endif %}
+                    </span>
                 </div>
                 <div class="product-info">
                     <h3>{{ product.nome }}</h3>

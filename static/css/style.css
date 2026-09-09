@@ -260,6 +260,35 @@ nav {
     box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
 }
 
+.genero-tag {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.genero-tag.feminino {
+    background: linear-gradient(135deg, #f8bbd9 0%, #f48fb1 100%);
+    color: #880e4f;
+}
+
+.genero-tag.masculino {
+    background: linear-gradient(135deg, #bbdefb 0%, #64b5f6 100%);
+    color: #0d47a1;
+}
+
+.genero-tag.unissex {
+    background: linear-gradient(135deg, #c8e6c9 0%, #81c784 100%);
+    color: #1b5e20;
+}
+    box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
+}
+
 .product-info {
     padding: 1.5rem;
 }

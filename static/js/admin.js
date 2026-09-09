@@ -25,20 +25,24 @@ document.addEventListener('DOMContentLoaded', function() {
     // Filtro de busca
     const searchInput = document.getElementById('searchInput');
     const filterCategoria = document.getElementById('filterCategoria');
+    const filterGenero = document.getElementById('filterGenero');
     const produtoItems = document.querySelectorAll('.produto-item');
 
     function filterProducts() {
         const searchTerm = searchInput.value.toLowerCase();
         const selectedCategoria = filterCategoria.value;
+        const selectedGenero = filterGenero ? filterGenero.value : 'all';
 
         produtoItems.forEach(item => {
             const nome = item.querySelector('h3').textContent.toLowerCase();
             const categoria = item.getAttribute('data-categoria');
+            const genero = item.getAttribute('data-genero');
 
             const matchesSearch = nome.includes(searchTerm);
             const matchesCategoria = selectedCategoria === 'all' || categoria === selectedCategoria;
+            const matchesGenero = selectedGenero === 'all' || genero === selectedGenero;
 
-            if (matchesSearch && matchesCategoria) {
+            if (matchesSearch && matchesCategoria && matchesGenero) {
                 item.style.display = 'grid';
             } else {
                 item.style.display = 'none';
@@ -48,6 +52,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchInput.addEventListener('input', filterProducts);
     filterCategoria.addEventListener('change', filterProducts);
+    if (filterGenero) {
+        filterGenero.addEventListener('change', filterProducts);
+    }
 
     // Atualizar subcategorias quando a categoria muda
     const subcategorias = {

@@ -37,6 +37,20 @@ def index():
     produtos = [p for p in data['produtos'] if p['categoria_id'] in categorias_ativas]
     return render_template('index.html', products=produtos, categorias=data['categorias'])
 
+@app.route('/feminino')
+def feminino():
+    data = load_produtos()
+    categorias_ativas = [cat['id'] for cat in data['categorias'] if cat.get('ativa', True)]
+    produtos = [p for p in data['produtos'] if p['categoria_id'] in categorias_ativas and p.get('genero') in ['feminino', 'unissex']]
+    return render_template('index.html', products=produtos, categorias=data['categorias'], genero='feminino')
+
+@app.route('/masculino')
+def masculino():
+    data = load_produtos()
+    categorias_ativas = [cat['id'] for cat in data['categorias'] if cat.get('ativa', True)]
+    produtos = [p for p in data['produtos'] if p['categoria_id'] in categorias_ativas and p.get('genero') in ['masculino', 'unissex']]
+    return render_template('index.html', products=produtos, categorias=data['categorias'], genero='masculino')
+
 @app.route('/produto/<int:product_id>')
 def produto(product_id):
     data = load_produtos()
@@ -103,6 +117,8 @@ def salvar_produtos():
                 produto['categoria_id'] = int(updates['categoria'])
             if 'subcategoria' in updates:
                 produto['subcategoria'] = updates['subcategoria']
+            if 'genero' in updates:
+                produto['genero'] = updates['genero']
             if 'preco' in updates:
                 produto['preco'] = updates['preco']
             if 'tamanhos' in updates:
