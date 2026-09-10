@@ -3,6 +3,10 @@ import os
 import json
 import secrets
 import uuid
+from datetime import datetime, timezone, timedelta
+
+# Horário de Brasília (UTC-3)
+BRT = timezone(timedelta(hours=-3))
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
@@ -277,7 +281,7 @@ def api_create_order():
     next_id = max((o['id'] for o in orders), default=0) + 1
     data['id'] = next_id
     data['status'] = 'Solicitado'
-    data['data'] = __import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')
+    data['data'] = datetime.now(BRT).strftime('%d/%m/%Y %H:%M')
     orders.append(data)
     save_orders(orders)
     return jsonify(data), 201
@@ -318,7 +322,7 @@ def api_update_order(order_id):
                             'cliente': data.get('nome', ''),
                             'telefone': data.get('telefone', ''),
                             'data': data.get('data', ''),
-                            'data_venda': __import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')
+                            'data_venda': datetime.now(BRT).strftime('%d/%m/%Y %H:%M')
                         }
                         # Append to sales.json
                         sales_file = os.path.join(BASE_DIR, 'sales.json')
