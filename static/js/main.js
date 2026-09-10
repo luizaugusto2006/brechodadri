@@ -85,7 +85,8 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.appendChild(lightbox);
 
     document.querySelectorAll('.product-image img').forEach(img => {
-        img.addEventListener('click', function() {
+        img.addEventListener('click', function(e) {
+            e.stopPropagation();
             const lightboxImg = lightbox.querySelector('img');
             lightboxImg.src = this.src;
             lightboxImg.alt = this.alt;
@@ -95,6 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     lightbox.addEventListener('click', function(e) {
+        e.stopPropagation();
         if (e.target === lightbox || e.target.classList.contains('lightbox-close')) {
             lightbox.classList.remove('active');
             document.body.style.overflow = 'auto';
