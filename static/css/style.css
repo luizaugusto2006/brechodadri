@@ -548,13 +548,12 @@ nav {
 .product-detail-image {
     position: relative;
     overflow: hidden;
-    max-height: 500px;
+    height: 500px;
 }
 
 .product-detail-image img {
     width: 100%;
-    height: auto;
-    max-height: 500px;
+    height: 100%;
     object-fit: contain;
     display: block;
 }
@@ -759,7 +758,7 @@ footer::before {
     }
 
     .product-detail-image {
-        max-height: 350px;
+        height: 350px;
         overflow: hidden;
     }
 
