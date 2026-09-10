@@ -750,6 +750,18 @@ footer::before {
         grid-template-columns: 1fr;
     }
 
+    .product-detail-image {
+        max-height: 400px;
+        overflow: hidden;
+    }
+
+    .product-detail-image img {
+        width: 100%;
+        height: auto;
+        max-height: 400px;
+        object-fit: contain;
+    }
+
     .action-buttons {
         flex-direction: column;
     }
