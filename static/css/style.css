@@ -1001,6 +1001,23 @@ footer::before {
     transform: scale(1.02);
 }
 
+/* Informação de Retirada */
+.pickup-info {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+    border-radius: 10px;
+    border-left: 4px solid #e91e63;
+}
+
+.pickup-info p {
+    color: #c2185b;
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0;
+    line-height: 1.5;
+}
+
 /* Compartilhar */
 .share-buttons {
     display: flex;
