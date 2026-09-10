@@ -192,15 +192,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Buscar subcategorias do servidor
         let subcategoriasData = {};
+        let categoriasMap = {};
 
         async function loadSubcategorias() {
             try {
                 const response = await fetch('/api/subcategorias');
                 if (response.ok) {
                     subcategoriasData = await response.json();
+                    console.log('Subcategorias carregadas:', subcategoriasData);
                 }
             } catch (error) {
                 console.error('Erro ao carregar subcategorias:', error);
+            }
+        }
+
+        // Construir mapa de categorias (id -> nome)
+        async function loadCategorias() {
+            try {
+                const response = await fetch('/api/categorias');
+                if (response.ok) {
+                    const cats = await response.json();
+                    cats.forEach(function(cat) {
+                        categoriasMap[cat.id] = cat.nome;
+                    });
+                    console.log('Categorias carregadas:', categoriasMap);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar categorias:', error);
             }
         }
 
@@ -209,11 +227,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 const categoriaId = this.value;
                 subcategoriaSelect.innerHTML = '<option value="">Selecione...</option>';
                 
-                // Buscar nome da categoria selecionada
-                const option = this.options[this.selectedIndex];
-                const catNome = option.text.replace(/^[^\s]+\s/, ''); // Remove emoji
+                const catNome = categoriasMap[categoriaId];
+                console.log('Categoria ID:', categoriaId, 'Nome:', catNome);
                 
-                if (subcategoriasData[catNome]) {
+                if (catNome && subcategoriasData[catNome]) {
                     subcategoriasData[catNome].forEach(function(sub) {
                         subcategoriaSelect.innerHTML += '<option value="' + sub + '">' + sub + '</option>';
                     });
@@ -221,7 +238,9 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        loadSubcategorias();
+        Promise.all([loadSubcategorias(), loadCategorias()]).then(function() {
+            console.log('Dados carregados com sucesso');
+        });
 
         novoProdutoForm.addEventListener('submit', function(e) {
             e.preventDefault();

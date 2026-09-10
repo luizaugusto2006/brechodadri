@@ -191,7 +191,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     let msg = 'Olá! Tenho interesse na peça ' + produto;
                     if (tamanho) msg += ' (Tamanho: ' + tamanho + ')';
                     msg += '. Nome: ' + nome;
-                    window.open('https://wa.me/5521995307936?text=' + encodeURIComponent(msg), '_blank');
+                    const whatsappNumber = '5521995307936';
+                    window.open('https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + encodeURIComponent(msg), '_blank');
                     orderModal.classList.remove('active');
                     orderForm.reset();
                     alert('Solicitação registrada! Pedido #' + data.id);

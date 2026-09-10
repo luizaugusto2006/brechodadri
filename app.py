@@ -348,6 +348,11 @@ def api_list_subcategorias():
     data = load_produtos()
     return jsonify(data.get('subcategorias', {}))
 
+@app.route('/api/categorias', methods=['GET'])
+def api_list_categorias():
+    data = load_produtos()
+    return jsonify(data.get('categorias', []))
+
 @app.route('/api/orders/<int:order_id>', methods=['DELETE'])
 @login_required
 def api_delete_order(order_id):
