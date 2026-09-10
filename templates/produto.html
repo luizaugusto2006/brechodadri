@@ -32,7 +32,7 @@
                     <span class="size">{{ tamanho }}</span>
                     {% endfor %}
                 </div>
-                <a href="#tamanhos" class="size-guide-link">📏 Ver Guia de Tamanhos</a>
+                <a href="#" class="size-guide-link" id="openSizeGuide">📏 Ver Guia de Tamanhos</a>
             </div>
 
             <div class="action-buttons">
@@ -64,4 +64,48 @@
         </div>
     </div>
 </section>
+
+<!-- Modal Guia de Tamanhos -->
+<div class="size-guide-modal" id="sizeGuideModal">
+    <div class="size-guide-modal-content">
+        <span class="size-guide-modal-close">&times;</span>
+        <h2>📏 Guia de Tamanhos</h2>
+        <table class="size-guide-table">
+            <thead>
+                <tr>
+                    <th>Tamanho</th>
+                    <th>Busto (cm)</th>
+                    <th>Cintura (cm)</th>
+                    <th>Quadril (cm)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="size-tag">P</span></td>
+                    <td>80-84</td>
+                    <td>60-64</td>
+                    <td>86-90</td>
+                </tr>
+                <tr>
+                    <td><span class="size-tag">M</span></td>
+                    <td>84-88</td>
+                    <td>64-68</td>
+                    <td>90-94</td>
+                </tr>
+                <tr>
+                    <td><span class="size-tag">G</span></td>
+                    <td>88-92</td>
+                    <td>68-72</td>
+                    <td>94-98</td>
+                </tr>
+                <tr>
+                    <td><span class="size-tag">GG</span></td>
+                    <td>92-96</td>
+                    <td>72-76</td>
+                    <td>98-102</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

@@ -98,6 +98,34 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Modal Guia de Tamanhos
+    const sizeGuideModal = document.getElementById('sizeGuideModal');
+    const openSizeGuideBtn = document.getElementById('openSizeGuide');
+    const sizeGuideClose = sizeGuideModal ? sizeGuideModal.querySelector('.size-guide-modal-close') : null;
+
+    if (openSizeGuideBtn && sizeGuideModal) {
+        openSizeGuideBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            sizeGuideModal.classList.add('active');
+        });
+
+        sizeGuideClose.addEventListener('click', function() {
+            sizeGuideModal.classList.remove('active');
+        });
+
+        sizeGuideModal.addEventListener('click', function(e) {
+            if (e.target === sizeGuideModal) {
+                sizeGuideModal.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && sizeGuideModal.classList.contains('active')) {
+                sizeGuideModal.classList.remove('active');
+            }
+        });
+    }
+
     // Gender filter in hero
     const unisexBtn = document.querySelector('.gender-btn.unissex');
     if (unisexBtn) {
