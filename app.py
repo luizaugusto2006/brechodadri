@@ -3,6 +3,9 @@ import os
 import json
 import secrets
 import uuid
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 from datetime import datetime, timezone, timedelta
 
 # Horário de Brasília (UTC-3)
@@ -359,6 +362,45 @@ def api_list_subcategorias():
 def api_list_categorias():
     data = load_produtos()
     return jsonify(data.get('categorias', []))
+
+@app.route('/api/newsletter', methods=['POST'])
+def api_newsletter():
+    data = request.get_json(force=True)
+    email = data.get('email', '')
+    if not email or '@' not in email:
+        return jsonify({'success': False, 'error': 'E-mail inválido'})
+    
+    # Salvar email no arquivo
+    newsletter_file = os.path.join(BASE_DIR, 'newsletter.json')
+    emails = []
+    if os.path.exists(newsletter_file):
+        with open(newsletter_file, 'r', encoding='utf-8') as f:
+            emails = json.load(f)
+    
+    if email in emails:
+        return jsonify({'success': False, 'error': 'E-mail já cadastrado'})
+    
+    emails.append(email)
+    with open(newsletter_file, 'w', encoding='utf-8') as f:
+        json.dump(emails, f, ensure_ascii=False, indent=2)
+    
+    # Tentar enviar email de notificação
+    try:
+        msg = MIMEMultipart()
+        msg['From'] = 'Brechó da Dri <aespaes@gmail.com>'
+        msg['To'] = 'aespaes@gmail.com'
+        msg['Subject'] = 'Novo cadastro na Newsletter - Brechó da Dri'
+        body = f"Novo cadastro na Newsletter\n\nE-mail: {email}\nData: {datetime.now(BRT).strftime('%d/%m/%Y %H:%M')}"
+        msg.attach(MIMEText(body, 'plain'))
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login('aespaes@gmail.com', 'SENHA_APP_GMAIL')
+        server.sendmail('aespaes@gmail.com', 'aespaes@gmail.com', msg.as_string())
+        server.quit()
+    except Exception as e:
+        pass  # Email opcional, cadastro já foi salvo
+    
+    return jsonify({'success': True})
 
 @app.route('/api/orders/<int:order_id>', methods=['DELETE'])
 @login_required

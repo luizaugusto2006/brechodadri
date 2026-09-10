@@ -247,8 +247,25 @@ document.addEventListener('DOMContentLoaded', function() {
     if (newsletterForm) {
         newsletterForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Obrigado por se cadastrar! Em breve você receberá nossas novidades.');
-            this.reset();
+            const email = this.querySelector('input[type="email"]').value;
+            
+            fetch('/api/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Cadastro realizado com sucesso! Em breve você receberá nossas novidades.');
+                    newsletterForm.reset();
+                } else {
+                    alert(data.error || 'Erro ao cadastrar.');
+                }
+            })
+            .catch(error => {
+                alert('Erro ao cadastrar. Tente novamente.');
+            });
         });
     }
 
