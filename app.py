@@ -1,7 +1,8 @@
-from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+from flask import Flask, render_template, jsonify, request, session, redirect, url_for, send_from_directory
 import os
 import json
 import secrets
+import uuid
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 app = Flask(__name__)
@@ -170,29 +171,40 @@ def adicionar_categoria():
 @login_required
 def adicionar_produto():
     data = load_produtos()
-    produto = request.json.get('produto', {})
     
-    if not produto.get('nome') or not produto.get('imagem'):
-        return jsonify({'success': False, 'error': 'Nome e imagem são obrigatórios'})
+    # Handle file upload
+    imagem_file = request.files.get('imagem')
+    imagem_nome = request.form.get('imagem_nome', '')
+    
+    if imagem_file and imagem_file.filename:
+        # Generate unique filename
+        ext = imagem_file.filename.rsplit('.', 1)[-1].lower()
+        imagem_nome = f"{uuid.uuid4().hex[:8]}.{ext}"
+        # Save to static/imagem/
+        imagem_file.save(os.path.join(IMAGES_DIR, imagem_nome))
+    elif imagem_nome:
+        pass  # Use provided filename
+    else:
+        return jsonify({'success': False, 'error': 'Imagem é obrigatória'})
     
     novo_id = max([p['id'] for p in data['produtos']], default=0) + 1
     
     novo_produto = {
         'id': novo_id,
-        'imagem': produto['imagem'],
-        'nome': produto['nome'],
-        'categoria_id': int(produto['categoria_id']),
-        'subcategoria': produto.get('subcategoria', ''),
-        'genero': produto.get('genero', 'feminino'),
-        'preco': float(produto.get('preco', 0)),
-        'tamanhos': produto.get('tamanhos', []),
-        'veste': produto.get('veste', ''),
-        'observacao': produto.get('observacao', '')
+        'imagem': imagem_nome,
+        'nome': request.form.get('nome', ''),
+        'categoria_id': int(request.form.get('categoria_id', 1)),
+        'subcategoria': request.form.get('subcategoria', ''),
+        'genero': request.form.get('genero', 'feminino'),
+        'preco': float(request.form.get('preco', 0)),
+        'tamanhos': request.form.getlist('tamanhos') if request.form.getlist('tamanhos') else [],
+        'veste': request.form.get('veste', ''),
+        'observacao': request.form.get('observacao', '')
     }
     
     data['produtos'].append(novo_produto)
     save_produtos(data)
-    return jsonify({'success': True, 'id': novo_id})
+    return jsonify({'success': True, 'id': novo_id, 'imagem': imagem_nome})
 
 @app.route('/admin/adicionar-subcategoria', methods=['POST'])
 @login_required

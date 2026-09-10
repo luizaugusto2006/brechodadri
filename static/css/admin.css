@@ -211,6 +211,26 @@ body {
     font-weight: 600;
 }
 
+/* Image Upload */
+.image-preview {
+    margin-top: 10px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 10px;
+    border: 2px solid #e0e0e0;
+}
+
+.help-text {
+    display: block;
+    margin-top: 5px;
+    color: #999;
+    font-size: 0.8rem;
+}
+
 .produto-form {
     display: grid;
     grid-template-columns: repeat(4, 1fr);

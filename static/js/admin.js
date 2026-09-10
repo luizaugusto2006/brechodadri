@@ -223,24 +223,10 @@ document.addEventListener('DOMContentLoaded', function() {
             e.preventDefault();
             const formData = new FormData(this);
             
-            const tamanhos = formData.getAll('tamanhos');
-            
-            const produto = {
-                nome: formData.get('nome'),
-                imagem: formData.get('imagem'),
-                categoria_id: formData.get('categoria_id'),
-                subcategoria: formData.get('subcategoria'),
-                genero: formData.get('genero'),
-                preco: formData.get('preco'),
-                tamanhos: tamanhos,
-                veste: formData.get('veste'),
-                observacao: formData.get('observacao')
-            };
-
+            // Use FormData directly for file upload
             fetch('/admin/adicionar-produto', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ produto: produto })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {
