@@ -313,26 +313,29 @@ def api_update_order(order_id):
                     if os.path.exists(src):
                         import shutil
                         shutil.move(src, dst)
-                        # Save sale data
-                        sale_data = {
-                            'order_id': order_id,
-                            'produto_id': produto_id,
-                            'produto_nome': produto.get('nome', ''),
-                            'imagem': imagem,
-                            'cliente': data.get('nome', ''),
-                            'telefone': data.get('telefone', ''),
-                            'data': data.get('data', ''),
-                            'data_venda': datetime.now(BRT).strftime('%d/%m/%Y %H:%M')
-                        }
-                        # Append to sales.json
-                        sales_file = os.path.join(BASE_DIR, 'sales.json')
-                        sales = []
-                        if os.path.exists(sales_file):
-                            with open(sales_file, 'r', encoding='utf-8') as f:
-                                sales = json.load(f)
-                        sales.append(sale_data)
-                        with open(sales_file, 'w', encoding='utf-8') as f:
-                            json.dump(sales, f, ensure_ascii=False, indent=2)
+                    # Remove product from produtos.json
+                    produtos['produtos'] = [p for p in produtos['produtos'] if p['id'] != produto_id]
+                    save_produtos(produtos)
+                    # Save sale data
+                    sale_data = {
+                        'order_id': order_id,
+                        'produto_id': produto_id,
+                        'produto_nome': produto.get('nome', ''),
+                        'imagem': imagem,
+                        'cliente': data.get('nome', ''),
+                        'telefone': data.get('telefone', ''),
+                        'data': data.get('data', ''),
+                        'data_venda': datetime.now(BRT).strftime('%d/%m/%Y %H:%M')
+                    }
+                    # Append to sales.json
+                    sales_file = os.path.join(BASE_DIR, 'sales.json')
+                    sales = []
+                    if os.path.exists(sales_file):
+                        with open(sales_file, 'r', encoding='utf-8') as f:
+                            sales = json.load(f)
+                    sales.append(sale_data)
+                    with open(sales_file, 'w', encoding='utf-8') as f:
+                        json.dump(sales, f, ensure_ascii=False, indent=2)
     
     orders[idx] = data
     save_orders(orders)
