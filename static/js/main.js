@@ -189,27 +189,20 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.id) {
                     const hoje = new Date().toLocaleDateString('pt-BR');
-                    let msg = 'Solicitação de Pedido\n\n';
-                    msg += 'Nome: ' + nome + '\n';
-                    msg += 'Tel.: ' + telefone + '\n';
-                    msg += 'Produto: ' + produto;
+                    let msg = '*Solicitação de Pedido*\n\n';
+                    msg += '*Nome:* ' + nome + '\n';
+                    msg += '*Tel.:* ' + telefone + '\n';
+                    msg += '*Produto:* ' + produto;
                     if (tamanho) msg += ' (Tamanho: ' + tamanho + ')';
-                    msg += '\nData: ' + hoje;
-                    if (observacao) msg += '\nObs.: ' + observacao;
+                    msg += '\n*Data:* ' + hoje;
+                    if (observacao) msg += '\n*Obs.:* ' + observacao;
                     const whatsappNumber = '5521995307936';
-                    const url = 'https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + encodeURIComponent(msg);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.target = '_blank';
-                    link.rel = 'noopener noreferrer';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
+                    window.location.href = 'https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + encodeURIComponent(msg);
                     setTimeout(function() {
                         orderModal.classList.remove('active');
                         orderForm.reset();
-                    }, 500);
-                    alert('Solicitação registrada! Pedido #' + data.id);
+                    }, 1000);
+                    alert('Solicitação #' + data.id + ' registrada!');
                 }
             })
             .catch(error => {
