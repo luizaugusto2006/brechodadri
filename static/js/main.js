@@ -188,15 +188,16 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.id) {
-                    let msg = '*Solicitação de Pedido*\n\n';
-                    msg += '*Nome:* ' + nome + '\n';
-                    msg += '*Tel.:* ' + telefone + '\n';
-                    msg += '*Produto:* ' + produto;
-                    if (tamanho) msg += ' (Tamanho: ' + tamanho + ')';
-                    msg += '\n*Data:* ' + new Date().toLocaleDateString('pt-BR');
-                    if (observacao) msg += '\n*Obs.:* ' + observacao;
+                    const hoje = new Date().toLocaleDateString('pt-BR');
+                    let msg = '*Solicitação de Pedido*%0A%0A';
+                    msg += '*Nome:* ' + encodeURIComponent(nome) + '%0A';
+                    msg += '*Tel.:* ' + encodeURIComponent(telefone) + '%0A';
+                    msg += '*Produto:* ' + encodeURIComponent(produto);
+                    if (tamanho) msg += ' (Tamanho: ' + encodeURIComponent(tamanho) + ')';
+                    msg += '%0A*Data:* ' + hoje;
+                    if (observacao) msg += '%0A*Obs.:* ' + encodeURIComponent(observacao);
                     const whatsappNumber = '5521995307936';
-                    window.open('https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + encodeURIComponent(msg), '_blank');
+                    window.open('https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + msg, '_blank');
                     orderModal.classList.remove('active');
                     orderForm.reset();
                     alert('Solicitação registrada! Pedido #' + data.id);
