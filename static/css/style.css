@@ -545,10 +545,18 @@ nav {
     border: 2px solid #f8bbd9;
 }
 
+.product-detail-image {
+    position: relative;
+    overflow: hidden;
+    max-height: 500px;
+}
+
 .product-detail-image img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
+    max-height: 500px;
+    object-fit: contain;
+    display: block;
 }
 
 .product-detail-info {
@@ -751,15 +759,15 @@ footer::before {
     }
 
     .product-detail-image {
-        max-height: 400px;
+        max-height: 350px;
         overflow: hidden;
     }
 
     .product-detail-image img {
         width: 100%;
-        height: auto;
-        max-height: 400px;
+        height: 100%;
         object-fit: contain;
+        display: block;
     }
 
     .action-buttons {
