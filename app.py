@@ -394,7 +394,7 @@ def api_newsletter():
         msg.attach(MIMEText(body, 'plain'))
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login('aespaes@gmail.com', 'SENHA_APP_GMAIL')
+        server.login('aespaes@gmail.com', 'clutemxspdjduxwi')
         server.sendmail('aespaes@gmail.com', 'aespaes@gmail.com', msg.as_string())
         server.quit()
     except Exception as e:
