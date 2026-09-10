@@ -98,6 +98,37 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Gender filter in hero
+    const unisexBtn = document.querySelector('.gender-btn.unissex');
+    if (unisexBtn) {
+        unisexBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const productCards = document.querySelectorAll('.product-card');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(b => b.classList.remove('active'));
+            
+            productCards.forEach(card => {
+                const generoTag = card.querySelector('.genero-tag');
+                if (generoTag && generoTag.classList.contains('unissex')) {
+                    card.style.display = 'block';
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'scale(1)';
+                    }, 50);
+                } else {
+                    card.style.opacity = '0';
+                    card.style.transform = 'scale(0.8)';
+                    setTimeout(() => {
+                        card.style.display = 'none';
+                    }, 300);
+                }
+            });
+            
+            document.querySelector('#produtos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+    }
+
     // Newsletter
     const newsletterForm = document.getElementById('newsletterForm');
     if (newsletterForm) {
