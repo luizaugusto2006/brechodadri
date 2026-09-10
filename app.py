@@ -113,6 +113,8 @@ def salvar_produtos():
         produto_id = str(produto['id'])
         if produto_id in produtos_atualizados:
             updates = produtos_atualizados[produto_id]
+            if 'nome' in updates:
+                produto['nome'] = updates['nome']
             if 'categoria' in updates:
                 produto['categoria_id'] = int(updates['categoria'])
             if 'subcategoria' in updates:
