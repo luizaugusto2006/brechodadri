@@ -1064,6 +1064,45 @@ footer::before {
     background: #1976d2;
 }
 
+/* Relatório de Vendas */
+.sales-report {
+    margin-top: 1rem;
+}
+
+.no-sales {
+    color: #999;
+    text-align: center;
+    padding: 2rem;
+}
+
+.sale-item {
+    display: flex;
+    gap: 1rem;
+    background: white;
+    border-radius: 15px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #4caf50;
+}
+
+.sale-image img {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.sale-info {
+    flex: 1;
+}
+
+.sale-line {
+    margin-bottom: 0.3rem;
+    color: #555;
+    font-size: 0.9rem;
+}
+
 /* Voltar ao Topo */
 .back-to-top {
     position: fixed;

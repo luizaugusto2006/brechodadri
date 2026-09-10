@@ -455,4 +455,42 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     loadOrders();
+
+    // ===== Relatório de Vendas =====
+    const salesReport = document.getElementById('salesReport');
+
+    async function loadSales() {
+        try {
+            const response = await fetch('/api/sales');
+            if (response.ok) {
+                const sales = await response.json();
+                renderSales(sales);
+            }
+        } catch (error) {
+            console.error('Erro ao carregar vendas:', error);
+        }
+    }
+
+    function renderSales(sales) {
+        if (!sales || !sales.length) {
+            salesReport.innerHTML = '<p class="no-sales">Nenhuma venda registrada.</p>';
+            return;
+        }
+
+        salesReport.innerHTML = sales.slice().reverse().map(function(s) {
+            return '<div class="sale-item">' +
+                '<div class="sale-image">' +
+                    '<img src="/static/vendas/' + s.imagem + '" alt="' + s.produto_nome + '">' +
+                '</div>' +
+                '<div class="sale-info">' +
+                    '<div class="sale-line"><strong>Produto:</strong> ' + s.produto_nome + '</div>' +
+                    '<div class="sale-line"><strong>Cliente:</strong> ' + s.cliente + '</div>' +
+                    '<div class="sale-line"><strong>Telefone:</strong> ' + s.telefone + '</div>' +
+                    '<div class="sale-line"><strong>Data da Venda:</strong> ' + s.data_venda + '</div>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+    }
+
+    loadSales();
 });

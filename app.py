@@ -9,6 +9,7 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
 IMAGES_DIR = os.path.join(BASE_DIR, 'static', 'imagem')
+VENDAS_DIR = os.path.join(BASE_DIR, 'static', 'vendas')
 PRODUTOS_FILE = os.path.join(BASE_DIR, 'produtos.json')
 ORDERS_FILE = os.path.join(BASE_DIR, 'orders.json')
 
@@ -290,9 +291,57 @@ def api_update_order(order_id):
         return jsonify({'error': 'Pedido não encontrado'}), 404
     data = request.get_json(force=True)
     data['id'] = order_id
+    
+    old_status = orders[idx].get('status', 'Solicitado')
+    new_status = data.get('status', '')
+    
+    # Move image to vendas folder when order is delivered
+    if new_status == 'Entregue' and old_status != 'Entregue':
+        produto_id = data.get('produto_id')
+        if produto_id:
+            produtos = load_produtos()
+            produto = next((p for p in produtos['produtos'] if p['id'] == produto_id), None)
+            if produto:
+                imagem = produto.get('imagem')
+                if imagem:
+                    src = os.path.join(IMAGES_DIR, imagem)
+                    dst = os.path.join(VENDAS_DIR, imagem)
+                    if os.path.exists(src):
+                        import shutil
+                        shutil.move(src, dst)
+                        # Save sale data
+                        sale_data = {
+                            'order_id': order_id,
+                            'produto_id': produto_id,
+                            'produto_nome': produto.get('nome', ''),
+                            'imagem': imagem,
+                            'cliente': data.get('nome', ''),
+                            'telefone': data.get('telefone', ''),
+                            'data': data.get('data', ''),
+                            'data_venda': __import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')
+                        }
+                        # Append to sales.json
+                        sales_file = os.path.join(BASE_DIR, 'sales.json')
+                        sales = []
+                        if os.path.exists(sales_file):
+                            with open(sales_file, 'r', encoding='utf-8') as f:
+                                sales = json.load(f)
+                        sales.append(sale_data)
+                        with open(sales_file, 'w', encoding='utf-8') as f:
+                            json.dump(sales, f, ensure_ascii=False, indent=2)
+    
     orders[idx] = data
     save_orders(orders)
     return jsonify(data)
+
+@app.route('/api/sales', methods=['GET'])
+@login_required
+def api_list_sales():
+    sales_file = os.path.join(BASE_DIR, 'sales.json')
+    if not os.path.exists(sales_file):
+        return jsonify([])
+    with open(sales_file, 'r', encoding='utf-8') as f:
+        return jsonify(json.load(f))
 
 @app.route('/api/orders/<int:order_id>', methods=['DELETE'])
 @login_required
