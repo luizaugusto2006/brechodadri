@@ -184,6 +184,80 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Formulário de novo produto
+    const novoProdutoForm = document.getElementById('novoProdutoForm');
+    if (novoProdutoForm) {
+        // Atualizar subcategorias quando a categoria muda
+        const categoriaSelect = novoProdutoForm.querySelector('[name="categoria_id"]');
+        const subcategoriaSelect = novoProdutoForm.querySelector('[name="subcategoria"]');
+
+        const subcategoriasMap = {
+            'Calças': ['Calça Jeans', 'Calça Alfaiataria', 'Calça Social', 'Calça Moletom', 'Calça Sarja'],
+            'Vestidos': ['Vestido Longo', 'Vestido Curto', 'Vestido Midi', 'Vestido Floral', 'Vestido Social'],
+            'Camisas': ['Camisa Social', 'Camisa Estampada', 'Camisa Lisa', 'Camisa Manga Longa', 'Camisa Manga Curta'],
+            'Saias': ['Saia Jeans', 'Saia Midi', 'Saia Curta', 'Saia Longa', 'Saia Social'],
+            'Blusas': ['Blusa Social', 'Blusa Estampada', 'Blusa Lisa', 'Blusa Cropped', 'Blusa Moletom'],
+            'Jaquetas': ['Jaqueta Jeans', 'Jaqueta Couro', 'Jaqueta Moletom', 'Jaqueta Corta Vento'],
+            'Acessórios': ['Bolsa', 'Cinto', 'Chapéu', 'Bijuterias', 'Cachecol'],
+            'Outros': ['Conjunto', 'Macacão', 'Pijama', 'ewear']
+        };
+
+        const categoriasNomes = {
+            '1': 'Calças', '2': 'Vestidos', '3': 'Camisas', '4': 'Saias',
+            '5': 'Blusas', '6': 'Jaquetas', '7': 'Acessórios', '8': 'Outros'
+        };
+
+        if (categoriaSelect) {
+            categoriaSelect.addEventListener('change', function() {
+                const categoriaNome = categoriasNomes[this.value];
+                subcategoriaSelect.innerHTML = '<option value="">Selecione...</option>';
+                if (categoriaNome && subcategoriasMap[categoriaNome]) {
+                    subcategoriasMap[categoriaNome].forEach(function(sub) {
+                        subcategoriaSelect.innerHTML += '<option value="' + sub + '">' + sub + '</option>';
+                    });
+                }
+            });
+        }
+
+        novoProdutoForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            
+            const tamanhos = formData.getAll('tamanhos');
+            
+            const produto = {
+                nome: formData.get('nome'),
+                imagem: formData.get('imagem'),
+                categoria_id: formData.get('categoria_id'),
+                subcategoria: formData.get('subcategoria'),
+                genero: formData.get('genero'),
+                preco: formData.get('preco'),
+                tamanhos: tamanhos,
+                veste: formData.get('veste'),
+                observacao: formData.get('observacao')
+            };
+
+            fetch('/admin/adicionar-produto', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ produto: produto })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Produto adicionado com sucesso! ID: ' + data.id);
+                    location.reload();
+                } else {
+                    alert(data.error || 'Erro ao adicionar produto.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                alert('Erro ao adicionar produto.');
+            });
+        });
+    }
+
     // Botões de remover subcategoria
     document.querySelectorAll('.btn-remove').forEach(btn => {
         btn.addEventListener('click', function() {

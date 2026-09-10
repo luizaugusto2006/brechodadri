@@ -185,6 +185,92 @@
             </section>
 
             <section class="admin-section">
+                <h2>Adicionar Novo Produto</h2>
+                <p class="section-info">Adicione um novo produto ao catálogo.</p>
+                
+                <form id="novoProdutoForm" class="inline-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nome da Peça</label>
+                            <input type="text" name="nome" placeholder="Ex: Calça Jeans" required class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Imagem (nome do arquivo)</label>
+                            <input type="text" name="imagem" placeholder="Ex: 71.webp" required class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Categoria</label>
+                            <select name="categoria_id" required class="form-control">
+                                <option value="">Selecione...</option>
+                                {% for cat in categorias %}
+                                <option value="{{ cat.id }}">{{ cat.emoji }} {{ cat.nome }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Subcategoria</label>
+                            <select name="subcategoria" class="form-control">
+                                <option value="">Selecione...</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Gênero</label>
+                            <select name="genero" required class="form-control">
+                                <option value="feminino">👗 Feminino</option>
+                                <option value="masculino">👔 Masculino</option>
+                                <option value="unissex">⚧ Unissex</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Preço (R$)</label>
+                            <input type="number" name="preco" step="0.01" min="0" required placeholder="0.00" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tamanhos Letra</label>
+                            <div class="tamanhos-checkbox">
+                                {% for tamanho in ['P', 'M', 'G', 'GG'] %}
+                                <label class="tamanho-label">
+                                    <input type="checkbox" name="tamanhos" value="{{ tamanho }}">
+                                    {{ tamanho }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Tamanhos Número</label>
+                            <div class="tamanhos-checkbox">
+                                {% for tamanho in ['36', '38', '40', '42', '44', '46', '48'] %}
+                                <label class="tamanho-label">
+                                    <input type="checkbox" name="tamanhos" value="{{ tamanho }}">
+                                    {{ tamanho }}
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Veste (opcional)</label>
+                            <input type="text" name="veste" placeholder="Ex: 38 veste 42" class="form-control">
+                        </div>
+                        <div class="form-group">
+                            <label>Observação (opcional)</label>
+                            <input type="text" name="observacao" placeholder="Ex: Peça com aparência de nova" class="form-control">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-success">+ Adicionar Produto</button>
+                    </div>
+                </form>
+            </section>
+
+            <section class="admin-section">
                 <h2>Gerenciar Produtos</h2>
                 <p class="section-info">Edite as categorias, subcategorias, preços e gênero de cada produto.</p>
                 

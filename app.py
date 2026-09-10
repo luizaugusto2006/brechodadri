@@ -166,6 +166,34 @@ def adicionar_categoria():
     save_produtos(data)
     return jsonify({'success': True, 'id': novo_id})
 
+@app.route('/admin/adicionar-produto', methods=['POST'])
+@login_required
+def adicionar_produto():
+    data = load_produtos()
+    produto = request.json.get('produto', {})
+    
+    if not produto.get('nome') or not produto.get('imagem'):
+        return jsonify({'success': False, 'error': 'Nome e imagem são obrigatórios'})
+    
+    novo_id = max([p['id'] for p in data['produtos']], default=0) + 1
+    
+    novo_produto = {
+        'id': novo_id,
+        'imagem': produto['imagem'],
+        'nome': produto['nome'],
+        'categoria_id': int(produto['categoria_id']),
+        'subcategoria': produto.get('subcategoria', ''),
+        'genero': produto.get('genero', 'feminino'),
+        'preco': float(produto.get('preco', 0)),
+        'tamanhos': produto.get('tamanhos', []),
+        'veste': produto.get('veste', ''),
+        'observacao': produto.get('observacao', '')
+    }
+    
+    data['produtos'].append(novo_produto)
+    save_produtos(data)
+    return jsonify({'success': True, 'id': novo_id})
+
 @app.route('/admin/adicionar-subcategoria', methods=['POST'])
 @login_required
 def adicionar_subcategoria():
