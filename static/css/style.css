@@ -756,7 +756,7 @@ footer::before {
 .whatsapp-float {
     position: fixed;
     bottom: 30px;
-    right: 30px;
+    left: 30px;
     background: #25d366;
     width: 60px;
     height: 60px;
@@ -778,7 +778,7 @@ footer::before {
 .back-to-top {
     position: fixed;
     bottom: 100px;
-    right: 30px;
+    left: 30px;
     background: linear-gradient(135deg, #e91e63 0%, #c2185b 100%);
     width: 50px;
     height: 50px;
@@ -1034,14 +1034,14 @@ footer::before {
 @media (max-width: 768px) {
     .whatsapp-float {
         bottom: 20px;
-        right: 20px;
+        left: 20px;
         width: 50px;
         height: 50px;
     }
     
     .back-to-top {
         bottom: 80px;
-        right: 20px;
+        left: 20px;
         width: 45px;
         height: 45px;
     }
