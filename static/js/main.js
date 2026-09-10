@@ -188,9 +188,13 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.id) {
-                    let msg = 'Olá! Tenho interesse na peça ' + produto;
+                    let msg = '*Solicitação de Pedido*\n\n';
+                    msg += '*Nome:* ' + nome + '\n';
+                    msg += '*Tel.:* ' + telefone + '\n';
+                    msg += '*Produto:* ' + produto;
                     if (tamanho) msg += ' (Tamanho: ' + tamanho + ')';
-                    msg += '. Nome: ' + nome;
+                    msg += '\n*Data:* ' + new Date().toLocaleDateString('pt-BR');
+                    if (observacao) msg += '\n*Obs.:* ' + observacao;
                     const whatsappNumber = '5521995307936';
                     window.open('https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + encodeURIComponent(msg), '_blank');
                     orderModal.classList.remove('active');
