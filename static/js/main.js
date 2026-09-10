@@ -189,17 +189,26 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 if (data.id) {
                     const hoje = new Date().toLocaleDateString('pt-BR');
-                    let msg = '*Solicitação de Pedido*%0A%0A';
-                    msg += '*Nome:* ' + encodeURIComponent(nome) + '%0A';
-                    msg += '*Tel.:* ' + encodeURIComponent(telefone) + '%0A';
-                    msg += '*Produto:* ' + encodeURIComponent(produto);
-                    if (tamanho) msg += ' (Tamanho: ' + encodeURIComponent(tamanho) + ')';
-                    msg += '%0A*Data:* ' + hoje;
-                    if (observacao) msg += '%0A*Obs.:* ' + encodeURIComponent(observacao);
+                    let msg = 'Solicitação de Pedido\n\n';
+                    msg += 'Nome: ' + nome + '\n';
+                    msg += 'Tel.: ' + telefone + '\n';
+                    msg += 'Produto: ' + produto;
+                    if (tamanho) msg += ' (Tamanho: ' + tamanho + ')';
+                    msg += '\nData: ' + hoje;
+                    if (observacao) msg += '\nObs.: ' + observacao;
                     const whatsappNumber = '5521995307936';
-                    window.open('https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + msg, '_blank');
-                    orderModal.classList.remove('active');
-                    orderForm.reset();
+                    const url = 'https://api.whatsapp.com/send?phone=' + whatsappNumber + '&text=' + encodeURIComponent(msg);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    setTimeout(function() {
+                        orderModal.classList.remove('active');
+                        orderForm.reset();
+                    }, 500);
                     alert('Solicitação registrada! Pedido #' + data.id);
                 }
             })
@@ -257,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const url = encodeURIComponent(window.location.href);
             const text = encodeURIComponent('Confira esta peça incrível no Brechó da Dri!');
             if (this.classList.contains('whatsapp')) {
-                window.open('https://wa.me/?text=' + text + '%20' + url, '_blank');
+                window.location.href = 'https://api.whatsapp.com/send?phone=5521995307936&text=' + text;
             } else if (this.classList.contains('instagram')) {
                 alert('Para compartilhar no Instagram, faça um print e compartilhe nos stories!');
             }
