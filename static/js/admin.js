@@ -296,4 +296,103 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Erro ao salvar produtos.');
         });
     });
+
+    // ===== Pedidos =====
+    let ordersData = [];
+    const ordersList = document.getElementById('ordersList');
+    const filterStatus = document.getElementById('filterStatus');
+
+    async function loadOrders() {
+        try {
+            const response = await fetch('/api/orders');
+            if (response.ok) {
+                ordersData = await response.json();
+                renderOrders();
+            }
+        } catch (error) {
+            console.error('Erro ao carregar pedidos:', error);
+        }
+    }
+
+    function renderOrders() {
+        const statusFilter = filterStatus ? filterStatus.value : 'all';
+        const filtered = ordersData.filter(function(o) {
+            return statusFilter === 'all' || o.status === statusFilter;
+        });
+
+        if (!filtered.length) {
+            ordersList.innerHTML = '<p class="no-orders">Nenhum pedido encontrado.</p>';
+            return;
+        }
+
+        ordersList.innerHTML = filtered.slice().reverse().map(function(o) {
+            var statusClass = 'status-' + o.status.toLowerCase();
+            var actions = '';
+            if (o.status === 'Solicitado') {
+                actions = '<button class="order-btn btn-confirm" data-action="confirm" data-id="' + o.id + '">✅ Confirmar</button>' +
+                          '<button class="order-btn btn-cancel" data-action="cancel" data-id="' + o.id + '">❌ Cancelar</button>';
+            } else if (o.status === 'Confirmado') {
+                actions = '<button class="order-btn btn-ship" data-action="ship" data-id="' + o.id + '">📦 Enviar</button>';
+            } else if (o.status === 'Enviado') {
+                actions = '<button class="order-btn btn-deliver" data-action="deliver" data-id="' + o.id + '">🚚 Entregue</button>';
+            }
+
+            return '<div class="order-item" data-id="' + o.id + '">' +
+                '<div class="order-header">' +
+                    '<span class="order-status-badge ' + statusClass + '">' + o.status + '</span>' +
+                    '<span class="order-date">' + o.data + '</span>' +
+                '</div>' +
+                '<div class="order-body">' +
+                    '<div class="order-line"><strong>Produto:</strong> ' + o.produto + '</div>' +
+                    '<div class="order-line"><strong>Cliente:</strong> ' + o.nome + '</div>' +
+                    '<div class="order-line"><strong>Telefone:</strong> ' + o.telefone + '</div>' +
+                    (o.tamanho ? '<div class="order-line"><strong>Tamanho:</strong> ' + o.tamanho + '</div>' : '') +
+                    (o.observacao ? '<div class="order-line"><strong>Obs:</strong> ' + o.observacao + '</div>' : '') +
+                '</div>' +
+                '<div class="order-actions">' + actions + '</div>' +
+            '</div>';
+        }).join('');
+
+        ordersList.querySelectorAll('[data-action]').forEach(function(btn) {
+            btn.addEventListener('click', function() {
+                var action = btn.getAttribute('data-action');
+                var id = parseInt(btn.getAttribute('data-id'));
+                updateOrderStatus(id, action);
+            });
+        });
+    }
+
+    async function updateOrderStatus(id, action) {
+        var order = ordersData.find(function(o) { return o.id === id; });
+        if (!order) return;
+
+        var newStatus = '';
+        switch (action) {
+            case 'confirm': newStatus = 'Confirmado'; break;
+            case 'cancel': newStatus = 'Cancelado'; break;
+            case 'ship': newStatus = 'Enviado'; break;
+            case 'deliver': newStatus = 'Entregue'; break;
+        }
+
+        if (newStatus) {
+            order.status = newStatus;
+            try {
+                await fetch('/api/orders/' + id, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(order)
+                });
+                renderOrders();
+                alert('Pedido #' + id + ' atualizado para: ' + newStatus);
+            } catch (error) {
+                alert('Erro ao atualizar pedido.');
+            }
+        }
+    }
+
+    if (filterStatus) {
+        filterStatus.addEventListener('change', renderOrders);
+    }
+
+    loadOrders();
 });

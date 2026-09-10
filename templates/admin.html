@@ -19,6 +19,26 @@
 
         <div class="admin-content">
             <section class="admin-section">
+                <h2>Pedidos</h2>
+                <p class="section-info">Gerencie os pedidos recebidos via WhatsApp.</p>
+                
+                <div class="filters">
+                    <select id="filterStatus" class="filter-select">
+                        <option value="all">Todos os status</option>
+                        <option value="Solicitado">Solicitado</option>
+                        <option value="Confirmado">Confirmado</option>
+                        <option value="Enviado">Enviado</option>
+                        <option value="Entregue">Entregue</option>
+                        <option value="Cancelado">Cancelado</option>
+                    </select>
+                </div>
+
+                <div id="ordersList" class="orders-list">
+                    <p class="no-orders">Nenhum pedido encontrado.</p>
+                </div>
+            </section>
+
+            <section class="admin-section">
                 <h2>Gerenciar Categorias</h2>
                 <p class="section-info">Selecione as categorias que aparecerão no site. Use o botão × para remover.</p>
                 

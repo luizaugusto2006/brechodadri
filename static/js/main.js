@@ -126,6 +126,83 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Modal Solicitar Produto
+    const orderModal = document.getElementById('orderModal');
+    const solicitarBtn = document.getElementById('solicitarBtn');
+    const orderForm = document.getElementById('orderForm');
+    const orderTamanho = document.getElementById('orderTamanho');
+
+    if (solicitarBtn && orderModal) {
+        solicitarBtn.addEventListener('click', function() {
+            const produto = this.getAttribute('data-produto');
+            const produtoId = this.getAttribute('data-produto-id');
+            const tamanhos = this.getAttribute('data-tamanhos').split(', ');
+
+            document.getElementById('orderProduto').value = produto;
+            document.getElementById('orderProdutoId').value = produtoId;
+
+            orderTamanho.innerHTML = '<option value="">Selecione...</option>';
+            tamanhos.forEach(function(t) {
+                if (t) {
+                    orderTamanho.innerHTML += '<option value="' + t + '">' + t + '</option>';
+                }
+            });
+
+            orderModal.classList.add('active');
+        });
+
+        orderModal.querySelector('.order-modal-close').addEventListener('click', function() {
+            orderModal.classList.remove('active');
+        });
+
+        orderModal.addEventListener('click', function(e) {
+            if (e.target === orderModal) {
+                orderModal.classList.remove('active');
+            }
+        });
+    }
+
+    if (orderForm) {
+        orderForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const produto = document.getElementById('orderProduto').value;
+            const produtoId = document.getElementById('orderProdutoId').value;
+            const nome = document.getElementById('orderNome').value;
+            const telefone = document.getElementById('orderTelefone').value;
+            const tamanho = orderTamanho.value;
+            const observacao = document.getElementById('orderObs').value;
+
+            fetch('/api/orders', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    produto: produto,
+                    produto_id: parseInt(produtoId),
+                    nome: nome,
+                    telefone: telefone,
+                    tamanho: tamanho,
+                    observacao: observacao
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    let msg = 'Olá! Tenho interesse na peça ' + produto;
+                    if (tamanho) msg += ' (Tamanho: ' + tamanho + ')';
+                    msg += '. Nome: ' + nome;
+                    window.open('https://wa.me/5521995307936?text=' + encodeURIComponent(msg), '_blank');
+                    orderModal.classList.remove('active');
+                    orderForm.reset();
+                    alert('Solicitação registrada! Pedido #' + data.id);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao registrar pedido.');
+            });
+        });
+    }
+
     // Gender filter in hero
     const unisexBtn = document.querySelector('.gender-btn.unissex');
     if (unisexBtn) {

@@ -45,9 +45,12 @@
             {% endif %}
 
             <div class="action-buttons">
-                <a href="https://wa.me/5521995307936?text=Olá! Tenho interesse na peça {{ product.nome }}" class="btn btn-whatsapp" target="_blank">
-                    Comprar no WhatsApp
-                </a>
+                <button type="button" class="btn btn-whatsapp" id="solicitarBtn" 
+                        data-produto="{{ product.nome }}" 
+                        data-produto-id="{{ product.id }}"
+                        data-tamanhos="{{ product.tamanhos|join(', ') }}">
+                    📱 Solicitar via WhatsApp
+                </button>
                 <a href="/" class="btn btn-secondary">Voltar</a>
             </div>
 
@@ -115,6 +118,37 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+</div>
+
+<!-- Modal Solicitar Produto -->
+<div class="order-modal" id="orderModal">
+    <div class="order-modal-content">
+        <span class="order-modal-close">&times;</span>
+        <h2>📱 Solicitar Produto</h2>
+        <form id="orderForm">
+            <input type="hidden" id="orderProduto" name="produto">
+            <input type="hidden" id="orderProdutoId" name="produto_id">
+            <div class="form-group">
+                <label for="orderNome">Seu Nome:</label>
+                <input type="text" id="orderNome" name="nome" required placeholder="Digite seu nome" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="orderTelefone">Seu WhatsApp:</label>
+                <input type="tel" id="orderTelefone" name="telefone" required placeholder="(21) 99999-9999" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="orderTamanho">Tamanho:</label>
+                <select id="orderTamanho" name="tamanho" class="form-control">
+                    <option value="">Selecione...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="orderObs">Observação:</label>
+                <textarea id="orderObs" name="observacao" placeholder="Ex: Peça com aparência de nova" class="form-control" rows="2"></textarea>
+            </div>
+            <button type="submit" class="btn btn-whatsapp btn-full">Enviar Solicitação</button>
+        </form>
     </div>
 </div>
 {% endblock %}

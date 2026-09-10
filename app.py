@@ -9,6 +9,7 @@ app.secret_key = secrets.token_hex(32)
 
 IMAGES_DIR = os.path.join(BASE_DIR, 'static', 'imagem')
 PRODUTOS_FILE = os.path.join(BASE_DIR, 'produtos.json')
+ORDERS_FILE = os.path.join(BASE_DIR, 'orders.json')
 
 ADMIN_USER = "admin"
 ADMIN_PASS = "brechodadri2026"
@@ -20,6 +21,16 @@ def load_produtos():
 def save_produtos(data):
     with open(PRODUTOS_FILE, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
+
+def load_orders():
+    if not os.path.exists(ORDERS_FILE):
+        return []
+    with open(ORDERS_FILE, 'r', encoding='utf-8') as f:
+        return json.load(f)
+
+def save_orders(orders):
+    with open(ORDERS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(orders, f, ensure_ascii=False, indent=2)
 
 def login_required(f):
     from functools import wraps
@@ -205,6 +216,50 @@ def remover_categoria():
             del data['subcategorias'][cat_nome]
     
     save_produtos(data)
+    return jsonify({'success': True})
+
+# ===== API de Pedidos =====
+
+@app.route('/api/orders', methods=['GET'])
+@login_required
+def api_list_orders():
+    return jsonify(load_orders())
+
+@app.route('/api/orders', methods=['POST'])
+def api_create_order():
+    orders = load_orders()
+    data = request.get_json(force=True)
+    required = ['produto', 'produto_id', 'nome', 'telefone']
+    missing = [f for f in required if not data.get(f)]
+    if missing:
+        return jsonify({'error': 'Campos obrigatórios: ' + ', '.join(missing)}), 400
+    next_id = max((o['id'] for o in orders), default=0) + 1
+    data['id'] = next_id
+    data['status'] = 'Solicitado'
+    data['data'] = __import__('datetime').datetime.now().strftime('%d/%m/%Y %H:%M')
+    orders.append(data)
+    save_orders(orders)
+    return jsonify(data), 201
+
+@app.route('/api/orders/<int:order_id>', methods=['PUT'])
+@login_required
+def api_update_order(order_id):
+    orders = load_orders()
+    idx = next((i for i, o in enumerate(orders) if o['id'] == order_id), None)
+    if idx is None:
+        return jsonify({'error': 'Pedido não encontrado'}), 404
+    data = request.get_json(force=True)
+    data['id'] = order_id
+    orders[idx] = data
+    save_orders(orders)
+    return jsonify(data)
+
+@app.route('/api/orders/<int:order_id>', methods=['DELETE'])
+@login_required
+def api_delete_order(order_id):
+    orders = load_orders()
+    orders = [o for o in orders if o['id'] != order_id]
+    save_orders(orders)
     return jsonify({'success': True})
 
 @app.errorhandler(404)
