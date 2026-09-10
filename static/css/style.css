@@ -793,6 +793,21 @@ footer::before {
     animation: fadeIn 0.5s ease-out;
 }
 
+/* Modal Guia de Tamanhos - OCULTO (ativar quando necessário) */
+.size-guide-modal {
+    display: none !important;
+}
+
+.size-guide-link {
+    display: none !important;
+}
+
+.size-guide-section {
+    display: none !important;
+}
+
+/* Fim Guia de Tamanhos */
+
 /* WhatsApp Flutuante */
 .whatsapp-float {
     position: fixed;
