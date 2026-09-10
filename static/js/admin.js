@@ -187,37 +187,41 @@ document.addEventListener('DOMContentLoaded', function() {
     // Formulário de novo produto
     const novoProdutoForm = document.getElementById('novoProdutoForm');
     if (novoProdutoForm) {
-        // Atualizar subcategorias quando a categoria muda
         const categoriaSelect = novoProdutoForm.querySelector('[name="categoria_id"]');
         const subcategoriaSelect = novoProdutoForm.querySelector('[name="subcategoria"]');
 
-        const subcategoriasMap = {
-            'Calças': ['Calça Jeans', 'Calça Alfaiataria', 'Calça Social', 'Calça Moletom', 'Calça Sarja'],
-            'Vestidos': ['Vestido Longo', 'Vestido Curto', 'Vestido Midi', 'Vestido Floral', 'Vestido Social'],
-            'Camisas': ['Camisa Social', 'Camisa Estampada', 'Camisa Lisa', 'Camisa Manga Longa', 'Camisa Manga Curta'],
-            'Saias': ['Saia Jeans', 'Saia Midi', 'Saia Curta', 'Saia Longa', 'Saia Social'],
-            'Blusas': ['Blusa Social', 'Blusa Estampada', 'Blusa Lisa', 'Blusa Cropped', 'Blusa Moletom'],
-            'Jaquetas': ['Jaqueta Jeans', 'Jaqueta Couro', 'Jaqueta Moletom', 'Jaqueta Corta Vento'],
-            'Acessórios': ['Bolsa', 'Cinto', 'Chapéu', 'Bijuterias', 'Cachecol'],
-            'Outros': ['Conjunto', 'Macacão', 'Pijama', 'ewear']
-        };
+        // Buscar subcategorias do servidor
+        let subcategoriasData = {};
 
-        const categoriasNomes = {
-            '1': 'Calças', '2': 'Vestidos', '3': 'Camisas', '4': 'Saias',
-            '5': 'Blusas', '6': 'Jaquetas', '7': 'Acessórios', '8': 'Outros'
-        };
+        async function loadSubcategorias() {
+            try {
+                const response = await fetch('/api/subcategorias');
+                if (response.ok) {
+                    subcategoriasData = await response.json();
+                }
+            } catch (error) {
+                console.error('Erro ao carregar subcategorias:', error);
+            }
+        }
 
         if (categoriaSelect) {
             categoriaSelect.addEventListener('change', function() {
-                const categoriaNome = categoriasNomes[this.value];
+                const categoriaId = this.value;
                 subcategoriaSelect.innerHTML = '<option value="">Selecione...</option>';
-                if (categoriaNome && subcategoriasMap[categoriaNome]) {
-                    subcategoriasMap[categoriaNome].forEach(function(sub) {
+                
+                // Buscar nome da categoria selecionada
+                const option = this.options[this.selectedIndex];
+                const catNome = option.text.replace(/^[^\s]+\s/, ''); // Remove emoji
+                
+                if (subcategoriasData[catNome]) {
+                    subcategoriasData[catNome].forEach(function(sub) {
                         subcategoriaSelect.innerHTML += '<option value="' + sub + '">' + sub + '</option>';
                     });
                 }
             });
         }
+
+        loadSubcategorias();
 
         novoProdutoForm.addEventListener('submit', function(e) {
             e.preventDefault();
