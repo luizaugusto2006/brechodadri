@@ -32,8 +32,17 @@
                     <span class="size">{{ tamanho }}</span>
                     {% endfor %}
                 </div>
-                <a href="#" class="size-guide-link" id="openSizeGuide">📏 Ver Guia de Tamanhos</a>
+                {% if product.veste %}
+                <p class="veste-info">Veste: {{ product.veste }}</p>
+                {% endif %}
             </div>
+
+            {% if product.observacao %}
+            <div class="observacao-section">
+                <h3>Observação</h3>
+                <p class="observacao-text">{{ product.observacao }}</p>
+            </div>
+            {% endif %}
 
             <div class="action-buttons">
                 <a href="https://wa.me/5521995307936?text=Olá! Tenho interesse na peça {{ product.nome }}" class="btn btn-whatsapp" target="_blank">

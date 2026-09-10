@@ -125,6 +125,10 @@ def salvar_produtos():
                 produto['preco'] = updates['preco']
             if 'tamanhos' in updates:
                 produto['tamanhos'] = updates['tamanhos']
+            if 'veste' in updates:
+                produto['veste'] = updates['veste']
+            if 'observacao' in updates:
+                produto['observacao'] = updates['observacao']
     
     save_produtos(data)
     return jsonify({'success': True})

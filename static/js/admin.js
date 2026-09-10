@@ -267,6 +267,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     produtos[produtoId].tamanhos.push(value);
                 } else if (campo === 'preco') {
                     produtos[produtoId][campo] = parseFloat(value);
+                } else if (campo === 'veste' || campo === 'observacao' || campo === 'nome') {
+                    produtos[produtoId][campo] = value;
                 } else {
                     produtos[produtoId][campo] = value;
                 }

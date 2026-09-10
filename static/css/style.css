@@ -808,6 +808,36 @@ footer::before {
 
 /* Fim Guia de Tamanhos */
 
+/* Informação Veste */
+.veste-info {
+    margin-top: 0.8rem;
+    color: #666;
+    font-size: 0.95rem;
+    font-style: italic;
+}
+
+/* Observação do Produto */
+.observacao-section {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #f5f5f5;
+    border-radius: 10px;
+    border-left: 4px solid #e91e63;
+}
+
+.observacao-section h3 {
+    color: #c2185b;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.observacao-text {
+    color: #555;
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.5;
+}
+
 /* WhatsApp Flutuante */
 .whatsapp-float {
     position: fixed;

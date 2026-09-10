@@ -236,7 +236,7 @@
                                            value="{{ produto.preco }}" step="0.01" min="0" class="form-control">
                                 </div>
                                 <div class="form-group">
-                                    <label>Tamanhos:</label>
+                                    <label>Tamanhos Letra:</label>
                                     <div class="tamanhos-checkbox">
                                         {% for tamanho in ['P', 'M', 'G', 'GG'] %}
                                         <label class="tamanho-label">
@@ -246,6 +246,27 @@
                                         </label>
                                         {% endfor %}
                                     </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Tamanhos Número:</label>
+                                    <div class="tamanhos-checkbox">
+                                        {% for tamanho in ['36', '38', '40', '42', '44', '46', '48'] %}
+                                        <label class="tamanho-label">
+                                            <input type="checkbox" name="produto_{{ produto.id }}_tamanhos" 
+                                                   value="{{ tamanho }}" {% if tamanho in produto.tamanhos %}checked{% endif %}>
+                                            {{ tamanho }}
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Veste (ex: Número 38, mas veste 42):</label>
+                                    <input type="text" name="produto_{{ produto.id }}_veste" 
+                                           value="{{ produto.veste|default('') }}" placeholder="Ex: 38 veste 42" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label>Observação (estado da peça):</label>
+                                    <textarea name="produto_{{ produto.id }}_observacao" class="form-control" rows="2" placeholder="Ex: Peça com aparência de nova">{{ produto.observacao|default('') }}</textarea>
                                 </div>
                             </div>
                         </div>
