@@ -390,7 +390,7 @@ def api_newsletter():
         msg['From'] = 'Brechó da Dri <aespaes@gmail.com>'
         msg['To'] = 'aespaes@gmail.com'
         msg['Subject'] = 'Novo cadastro na Newsletter - Brechó da Dri'
-        body = f"Novo cadastro na Newsletter\n\nE-mail: {email}\nData: {datetime.now(BRT).strftime('%d/%m/%Y %H:%M')}"
+        body = f"Olá!\n\nUm novo cliente quer receber informações de novidades do Brechó da Dri!\n\nE-mail: {email}\nData: {datetime.now(BRT).strftime('%d/%m/%Y %H:%M')}\n\nPara enviar ofertas, acesse o painel administrativo."
         msg.attach(MIMEText(body, 'plain'))
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
