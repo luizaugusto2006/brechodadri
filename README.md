@@ -1,4 +1,4 @@
-# Brechó da Adri
+# Brechó da Dri
 
 Site de e-commerce para venda de roupas de segunda mão.
 
