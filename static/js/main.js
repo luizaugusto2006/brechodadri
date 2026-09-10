@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
             const url = encodeURIComponent(window.location.href);
-            const text = encodeURIComponent('Confira esta peça incrível no Brechó da Adri!');
+            const text = encodeURIComponent('Confira esta peça incrível no Brechó da Dri!');
             if (this.classList.contains('whatsapp')) {
                 window.open('https://wa.me/?text=' + text + '%20' + url, '_blank');
             } else if (this.classList.contains('instagram')) {
