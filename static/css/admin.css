@@ -280,6 +280,96 @@ body {
     accent-color: #e91e63;
 }
 
+.form-row .form-group-tamanhos {
+    flex: 1 1 100%;
+}
+
+.produto-form .form-group-tamanhos {
+    grid-column: span 2;
+}
+
+.tamanhos-grupos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px 25px;
+    background: #fafafa;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    padding: 12px 15px;
+}
+
+.tamanho-grupo-titulo {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #999;
+    margin-bottom: 8px;
+}
+
+.tamanho-grupo .tamanhos-checkbox {
+    flex-wrap: wrap;
+    row-gap: 6px;
+}
+
+.add-tamanho-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.add-tamanho-row .form-control {
+    flex: 1;
+    min-width: 180px;
+    max-width: 260px;
+    padding: 8px 10px;
+}
+
+.add-tamanho-row .btn {
+    padding: 9px 18px;
+    font-size: 0.85rem;
+}
+
+.tamanhos-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.tamanho-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fce4ec;
+    color: #c2185b;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.tamanho-tag:hover {
+    background: #f8bbd9;
+}
+
+.btn-remove-tamanho {
+    background: none;
+    border: none;
+    color: #c2185b;
+    font-size: 1.2rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0;
+    transition: color 0.3s;
+}
+
+.btn-remove-tamanho:hover {
+    color: #880e4f;
+}
+
 .form-actions {
     margin-top: 25px;
     text-align: center;
@@ -331,6 +421,15 @@ body {
 @media (max-width: 600px) {
     .produto-form {
         grid-template-columns: 1fr;
+    }
+
+    .produto-form .form-group-tamanhos {
+        grid-column: auto;
+    }
+
+    .tamanhos-grupos {
+        flex-direction: column;
+        gap: 12px;
     }
     
     .admin-header {

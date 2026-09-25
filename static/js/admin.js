@@ -22,6 +22,166 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // ===== Tamanhos personalizados =====
+    const tamanhosTags = document.getElementById('tamanhosTags');
+
+    function grupoDoTamanho(valor) {
+        if (/^\d+$/.test(valor)) return 'Número';
+        if (/^[A-Za-z]{1,3}$/.test(valor)) return 'Letra';
+        return 'Outros';
+    }
+
+    function nomeDoCampoTamanho(container) {
+        const form = container.closest('form');
+        if (form && form.id === 'novoProdutoForm') return 'tamanhos';
+
+        const item = container.closest('.produto-item');
+        if (item) {
+            const existente = item.querySelector('input[type="checkbox"][name$="_tamanhos"]');
+            if (existente) return existente.name;
+
+            const outro = item.querySelector('[name]');
+            if (outro) return 'produto_' + outro.name.split('_')[1] + '_tamanhos';
+        }
+        return 'tamanhos';
+    }
+
+    function adicionarCheckboxTamanho(valor) {
+        document.querySelectorAll('.tamanhos-grupos').forEach(function(gruposBox) {
+            const jaTem = Array.from(gruposBox.querySelectorAll('input[type="checkbox"]'))
+                .some(function(input) { return input.value === valor; });
+            if (jaTem) return;
+
+            const grupoNome = grupoDoTamanho(valor);
+            let grupo = gruposBox.querySelector('.tamanho-grupo[data-grupo="' + grupoNome + '"]');
+
+            if (!grupo) {
+                grupo = document.createElement('div');
+                grupo.className = 'tamanho-grupo';
+                grupo.setAttribute('data-grupo', grupoNome);
+                grupo.innerHTML = '<span class="tamanho-grupo-titulo">' + grupoNome + '</span>' +
+                                  '<div class="tamanhos-checkbox" data-grupo="' + grupoNome + '"></div>';
+                gruposBox.appendChild(grupo);
+            }
+
+            const label = document.createElement('label');
+            label.className = 'tamanho-label';
+
+            const input = document.createElement('input');
+            input.type = 'checkbox';
+            input.name = nomeDoCampoTamanho(gruposBox);
+            input.value = valor;
+
+            label.appendChild(input);
+            label.appendChild(document.createTextNode(' ' + valor));
+            grupo.querySelector('.tamanhos-checkbox').appendChild(label);
+        });
+    }
+
+    function removerCheckboxTamanho(valor) {
+        document.querySelectorAll('.tamanhos-grupos input[type="checkbox"]').forEach(function(input) {
+            if (input.value === valor && input.closest('label')) {
+                input.closest('label').remove();
+            }
+        });
+
+        document.querySelectorAll('.tamanho-grupo').forEach(function(grupo) {
+            if (!grupo.querySelector('input[type="checkbox"]')) {
+                grupo.remove();
+            }
+        });
+    }
+
+    function adicionarTagTamanho(valor) {
+        if (!tamanhosTags) return;
+
+        const jaTem = Array.from(tamanhosTags.querySelectorAll('.tamanho-tag'))
+            .some(function(tag) { return tag.getAttribute('data-tamanho') === valor; });
+        if (jaTem) return;
+
+        const tag = document.createElement('span');
+        tag.className = 'tamanho-tag';
+        tag.setAttribute('data-tamanho', valor);
+        tag.appendChild(document.createTextNode(valor + ' '));
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-remove-tamanho';
+        btn.setAttribute('data-tamanho', valor);
+        btn.title = 'Remover tamanho';
+        btn.textContent = '×';
+        tag.appendChild(btn);
+
+        tamanhosTags.appendChild(tag);
+    }
+
+    function salvarTamanho(nome, url) {
+        return fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ nome: nome })
+        }).then(function(response) { return response.json(); });
+    }
+
+    document.querySelectorAll('.btn-add-tamanho').forEach(function(btn) {
+        const input = btn.closest('.add-tamanho-row').querySelector('.input-novo-tamanho');
+
+        btn.addEventListener('click', function() {
+            const valor = input.value.trim();
+            if (!valor) {
+                input.focus();
+                return;
+            }
+
+            salvarTamanho(valor, '/admin/adicionar-tamanho')
+                .then(function(data) {
+                    if (!data.success) {
+                        alert(data.error || 'Erro ao adicionar tamanho.');
+                        return;
+                    }
+                    adicionarTagTamanho(valor);
+                    adicionarCheckboxTamanho(valor);
+                    input.value = '';
+                    input.focus();
+                })
+                .catch(function(error) {
+                    console.error('Erro:', error);
+                    alert('Erro ao adicionar tamanho.');
+                });
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                btn.click();
+            }
+        });
+    });
+
+    if (tamanhosTags) {
+        tamanhosTags.addEventListener('click', function(e) {
+            const btn = e.target.closest('.btn-remove-tamanho');
+            if (!btn) return;
+
+            const valor = btn.getAttribute('data-tamanho');
+            if (!confirm('Remover o tamanho "' + valor + '"?')) return;
+
+            salvarTamanho(valor, '/admin/remover-tamanho')
+                .then(function(data) {
+                    if (!data.success) {
+                        alert(data.error || 'Erro ao remover tamanho.');
+                        return;
+                    }
+                    removerCheckboxTamanho(valor);
+                    btn.closest('.tamanho-tag').remove();
+                })
+                .catch(function(error) {
+                    console.error('Erro:', error);
+                    alert('Erro ao remover tamanho.');
+                });
+        });
+    }
+
     // Filtro de busca
     const searchInput = document.getElementById('searchInput');
     const filterCategoria = document.getElementById('filterCategoria');

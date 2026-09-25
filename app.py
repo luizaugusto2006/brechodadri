@@ -41,6 +41,31 @@ def save_orders(orders):
     with open(ORDERS_FILE, 'w', encoding='utf-8') as f:
         json.dump(orders, f, ensure_ascii=False, indent=2)
 
+TAMANHOS_PADRAO = ['P', 'M', 'G', 'GG', '36', '38', '40', '42', '44', '46', '48', 'Tamanho Único']
+
+def get_tamanhos(data):
+    tamanhos = data.get('tamanhos_disponiveis')
+    if not tamanhos:
+        tamanhos = list(TAMANHOS_PADRAO)
+        data['tamanhos_disponiveis'] = tamanhos
+    return tamanhos
+
+def agrupar_tamanhos(disponiveis, selecionados=None):
+    selecionados = list(selecionados or [])
+    todos = list(disponiveis) + [t for t in selecionados if t not in disponiveis]
+    grupos = {'Letra': [], 'Número': [], 'Outros': []}
+    for t in todos:
+        if t.isdigit():
+            grupos['Número'].append(t)
+        elif len(t) <= 3 and t.isalpha():
+            grupos['Letra'].append(t)
+        else:
+            grupos['Outros'].append(t)
+    return [
+        {'titulo': nome, 'itens': [{'valor': v, 'checked': v in selecionados} for v in itens]}
+        for nome, itens in grupos.items() if itens
+    ]
+
 def login_required(f):
     from functools import wraps
     @wraps(f)
@@ -108,8 +133,13 @@ def admin():
     categorias_ativas = [cat['id'] for cat in categorias if cat.get('ativa', True)]
     produtos = data['produtos']
     subcategorias = data.get('subcategorias', {})
+    tamanhos = get_tamanhos(data)
+    for produto in produtos:
+        produto['tam_grupos'] = agrupar_tamanhos(tamanhos, produto.get('tamanhos', []))
+    grupos_novos = agrupar_tamanhos(tamanhos)
     return render_template('admin.html', categorias=categorias, categorias_ativas=categorias_ativas, 
-                         produtos=produtos, subcategorias=subcategorias)
+                         produtos=produtos, subcategorias=subcategorias, tamanhos=tamanhos,
+                         grupos_novos=grupos_novos)
 
 @app.route('/admin/salvar-categorias', methods=['POST'])
 @login_required
@@ -249,6 +279,37 @@ def remover_subcategoria():
     
     save_produtos(data)
     return jsonify({'success': True})
+
+@app.route('/admin/adicionar-tamanho', methods=['POST'])
+@login_required
+def adicionar_tamanho():
+    data = load_produtos()
+    nome = (request.json.get('nome') or '').strip()
+
+    if not nome:
+        return jsonify({'success': False, 'error': 'Informe o tamanho'})
+
+    tamanhos = get_tamanhos(data)
+    if any(t.lower() == nome.lower() for t in tamanhos):
+        return jsonify({'success': False, 'error': 'Esse tamanho já existe'})
+
+    tamanhos.append(nome)
+    save_produtos(data)
+    return jsonify({'success': True, 'tamanhos': tamanhos})
+
+@app.route('/admin/remover-tamanho', methods=['POST'])
+@login_required
+def remover_tamanho():
+    data = load_produtos()
+    nome = request.json.get('nome')
+
+    if not nome:
+        return jsonify({'success': False, 'error': 'Tamanho não informado'})
+
+    tamanhos = [t for t in get_tamanhos(data) if t != nome]
+    data['tamanhos_disponiveis'] = tamanhos
+    save_produtos(data)
+    return jsonify({'success': True, 'tamanhos': tamanhos})
 
 @app.route('/admin/remover-categoria', methods=['POST'])
 @login_required

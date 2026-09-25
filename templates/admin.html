@@ -194,6 +194,20 @@
             </section>
 
             <section class="admin-section">
+                <h2>Gerenciar Tamanhos</h2>
+                <p class="section-info">Tamanhos disponíveis nas listagens de produtos. Use o × para remover e o campo abaixo (no formulário do produto) para adicionar outros, como "Tamanho Único".</p>
+
+                <div class="tamanhos-tags" id="tamanhosTags">
+                    {% for t in tamanhos %}
+                    <span class="tamanho-tag" data-tamanho="{{ t }}">
+                        {{ t }}
+                        <button type="button" class="btn-remove-tamanho" data-tamanho="{{ t }}" title="Remover tamanho">×</button>
+                    </span>
+                    {% endfor %}
+                </div>
+            </section>
+
+            <section class="admin-section">
                 <h2>Adicionar Novo Produto</h2>
                 <p class="section-info">Adicione um novo produto ao catálogo.</p>
                 
@@ -242,26 +256,27 @@
                         </div>
                     </div>
                     <div class="form-row">
-                        <div class="form-group">
-                            <label>Tamanhos Letra</label>
-                            <div class="tamanhos-checkbox">
-                                {% for tamanho in ['P', 'M', 'G', 'GG'] %}
-                                <label class="tamanho-label">
-                                    <input type="checkbox" name="tamanhos" value="{{ tamanho }}">
-                                    {{ tamanho }}
-                                </label>
+                        <div class="form-group form-group-tamanhos">
+                            <label>Tamanhos</label>
+                            <div class="tamanhos-grupos">
+                                {% for grupo in grupos_novos %}
+                                <div class="tamanho-grupo" data-grupo="{{ grupo.titulo }}">
+                                    <span class="tamanho-grupo-titulo">{{ grupo.titulo }}</span>
+                                    <div class="tamanhos-checkbox" data-grupo="{{ grupo.titulo }}">
+                                        {% for item in grupo.itens %}
+                                        <label class="tamanho-label">
+                                            <input type="checkbox" name="tamanhos" value="{{ item.valor }}">
+                                            {{ item.valor }}
+                                        </label>
+                                        {% endfor %}
+                                    </div>
+                                </div>
                                 {% endfor %}
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Tamanhos Número</label>
-                            <div class="tamanhos-checkbox">
-                                {% for tamanho in ['36', '38', '40', '42', '44', '46', '48'] %}
-                                <label class="tamanho-label">
-                                    <input type="checkbox" name="tamanhos" value="{{ tamanho }}">
-                                    {{ tamanho }}
-                                </label>
-                                {% endfor %}
+                            <div class="add-tamanho-row">
+                                <input type="text" class="form-control input-novo-tamanho"
+                                       placeholder="Ex: Tamanho Único" maxlength="30">
+                                <button type="button" class="btn btn-success btn-add-tamanho">+ Adicionar</button>
                             </div>
                         </div>
                     </div>
@@ -352,27 +367,22 @@
                                     <input type="number" name="produto_{{ produto.id }}_preco" 
                                            value="{{ produto.preco }}" step="0.01" min="0" class="form-control">
                                 </div>
-                                <div class="form-group">
-                                    <label>Tamanhos Letra:</label>
-                                    <div class="tamanhos-checkbox">
-                                        {% for tamanho in ['P', 'M', 'G', 'GG'] %}
-                                        <label class="tamanho-label">
-                                            <input type="checkbox" name="produto_{{ produto.id }}_tamanhos" 
-                                                   value="{{ tamanho }}" {% if tamanho in produto.tamanhos %}checked{% endif %}>
-                                            {{ tamanho }}
-                                        </label>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Tamanhos Número:</label>
-                                    <div class="tamanhos-checkbox">
-                                        {% for tamanho in ['36', '38', '40', '42', '44', '46', '48'] %}
-                                        <label class="tamanho-label">
-                                            <input type="checkbox" name="produto_{{ produto.id }}_tamanhos" 
-                                                   value="{{ tamanho }}" {% if tamanho in produto.tamanhos %}checked{% endif %}>
-                                            {{ tamanho }}
-                                        </label>
+                                <div class="form-group form-group-tamanhos">
+                                    <label>Tamanhos:</label>
+                                    <div class="tamanhos-grupos">
+                                        {% for grupo in produto.tam_grupos %}
+                                        <div class="tamanho-grupo" data-grupo="{{ grupo.titulo }}">
+                                            <span class="tamanho-grupo-titulo">{{ grupo.titulo }}</span>
+                                            <div class="tamanhos-checkbox" data-grupo="{{ grupo.titulo }}">
+                                                {% for item in grupo.itens %}
+                                                <label class="tamanho-label">
+                                                    <input type="checkbox" name="produto_{{ produto.id }}_tamanhos" 
+                                                           value="{{ item.valor }}" {% if item.checked %}checked{% endif %}>
+                                                    {{ item.valor }}
+                                                </label>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
                                         {% endfor %}
                                     </div>
                                 </div>

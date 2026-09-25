@@ -19,6 +19,7 @@
     "Acessórios": ["Bolsa", "Cinto", "Chapéu", "Bijuterias", "Cachecol"],
     "Outros": ["Conjunto", "Macacão", "Pijama", "ewear"]
   },
+  "tamanhos_disponiveis": ["P", "M", "G", "GG", "36", "38", "40", "42", "44", "46", "48", "Tamanho Único"],
   "produtos": [
     {"id": 1, "imagem": "01.webp", "nome": "Roupa 01", "categoria_id": 1, "subcategoria": "Calça Jeans", "genero": "feminino", "preco": 45.00, "tamanhos": ["P", "M", "G"]},
     {"id": 2, "imagem": "02.webp", "nome": "Roupa 02", "categoria_id": 1, "subcategoria": "Calça Jeans", "genero": "feminino", "preco": 39.90, "tamanhos": ["M", "G", "GG"]},
