@@ -12,6 +12,19 @@ body {
     background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23f8bbd9' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+section[id] {
+    scroll-margin-top: 90px;
+}
+
 /* Header */
 header {
     background: linear-gradient(135deg, #f8bbd9 0%, #e91e63 50%, #c2185b 100%);
@@ -326,8 +339,6 @@ nav {
 .genero-tag.unissex {
     background: linear-gradient(135deg, #c8e6c9 0%, #81c784 100%);
     color: #1b5e20;
-}
-    box-shadow: 0 3px 10px rgba(233, 30, 99, 0.3);
 }
 
 .product-info {
@@ -738,32 +749,160 @@ footer::before {
     }
 
     .nav-links a {
-        margin: 0.5rem 0;
-        padding: 0.8rem;
+        margin: 0.3rem 0;
+        padding: 0.9rem;
     }
 
     .menu-toggle {
         display: flex;
     }
 
+    /* Hero */
+    .hero {
+        height: auto;
+        min-height: 65vh;
+        padding: 3rem 1.25rem;
+    }
+
     .hero-content h1 {
-        font-size: 2.2rem;
+        font-size: 2rem;
     }
 
     .hero-content p {
-        font-size: 1.1rem;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .gender-btn {
+        padding: 0.7rem 1.2rem;
+        font-size: 0.9rem;
+    }
+
+    .btn {
+        padding: 0.9rem 2rem;
+        font-size: 0.95rem;
+    }
+
+    /* Seções */
+    .featured {
+        padding: 3rem 1.25rem;
+    }
+
+    .featured h2, .about h2, .contact h2 {
+        font-size: 1.7rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .filter-buttons {
+        gap: 0.6rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-btn {
+        padding: 0.55rem 1.1rem;
+        font-size: 0.82rem;
+    }
+
+    .products-grid {
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.25rem;
+    }
+
+    .about {
+        padding: 3rem 1.25rem;
+    }
+
+    .about-content p {
+        font-size: 1rem;
+        margin-bottom: 2rem;
+        line-height: 1.7;
+    }
+
+    .features {
+        gap: 1.25rem;
+    }
+
+    .feature {
+        padding: 1.75rem;
+    }
+
+    .feature h3 {
+        font-size: 1.15rem;
+    }
+
+    .owner-section {
+        padding: 3rem 1.25rem;
+    }
+
+    .owner-card {
+        padding: 2rem;
+    }
+
+    .owner-photo {
+        width: 120px;
+        height: 120px;
+    }
+
+    .contact {
+        padding: 3rem 1.25rem;
+    }
+
+    .contact-info {
+        display: block;
+        width: 100%;
+        padding: 1.75rem 1.25rem;
+    }
+
+    .contact-info p {
+        font-size: 1rem;
+    }
+
+    /* Newsletter e guia de tamanhos */
+    .newsletter-section {
+        padding: 3rem 1.25rem;
+    }
+
+    .newsletter-content h2 {
+        font-size: 1.4rem;
+    }
+
+    .newsletter-input {
+        min-width: 0;
+        width: 100%;
+        padding: 0.9rem 1.25rem;
+    }
+
+    .size-guide-section {
+        padding: 3rem 1.25rem;
+    }
+
+    .size-guide-content h2 {
+        font-size: 1.4rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .size-table th,
+    .size-table td {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    /* Página do produto */
+    .product-detail {
+        padding: 1.5rem 1rem;
     }
 
     .product-detail-container {
         grid-template-columns: 1fr;
+        gap: 0;
+        border-radius: 20px;
     }
 
     .product-detail-image {
-        height: 350px;
+        height: auto;
+        aspect-ratio: 3 / 4;
         overflow: hidden;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        display: block;
     }
 
     .product-detail-image img {
@@ -772,6 +911,14 @@ footer::before {
         object-fit: contain;
         object-position: center;
         display: block;
+    }
+
+    .product-detail-info {
+        padding: 1.5rem 1.25rem;
+    }
+
+    .product-detail-info h1 {
+        font-size: 1.7rem;
     }
 
     .action-buttons {
@@ -787,22 +934,29 @@ footer::before {
         font-size: 1rem;
     }
 
-    .filter-buttons {
-        gap: 0.5rem;
+    .share-buttons {
+        flex-wrap: wrap;
     }
 
-    .filter-btn {
-        padding: 0.4rem 1rem;
-        font-size: 0.85rem;
+    /* Modais */
+    .order-modal-content,
+    .size-guide-modal-content {
+        padding: 1.75rem 1.25rem;
+        max-height: 88vh;
+        overflow-y: auto;
     }
 
-    .owner-card {
-        padding: 2rem;
+    /* Rodapé */
+    footer {
+        padding: 2.5rem 1.25rem 1rem;
     }
 
-    .owner-photo {
-        width: 120px;
-        height: 120px;
+    .footer-content {
+        gap: 1.5rem;
+    }
+
+    .footer-section h3 {
+        font-size: 1.15rem;
     }
 }
 
@@ -1543,5 +1697,238 @@ footer::before {
     
     .newsletter-input {
         width: 100%;
+    }
+}
+
+/* ===== Celulares (mobile-first) ===== */
+@media (max-width: 480px) {
+    nav {
+        padding: 0 1rem;
+    }
+
+    .logo a {
+        font-size: 1.35rem;
+        letter-spacing: 0.5px;
+    }
+
+    .hero {
+        min-height: 58vh;
+        padding: 2.5rem 1rem;
+    }
+
+    .hero-content h1 {
+        font-size: 1.7rem;
+        letter-spacing: 1px;
+    }
+
+    .hero-content p {
+        font-size: 0.95rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .gender-buttons {
+        gap: 0.6rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .gender-btn {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+    }
+
+    .btn {
+        padding: 0.85rem 1.75rem;
+        font-size: 0.9rem;
+    }
+
+    .featured {
+        padding: 2.5rem 1rem;
+    }
+
+    .featured h2, .about h2, .contact h2 {
+        font-size: 1.45rem;
+        margin-bottom: 1.25rem;
+    }
+
+    /* Filtros em linha rolável (não empilham na tela) */
+    .filter-buttons {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 0.4rem;
+        margin-bottom: 1.75rem;
+    }
+
+    .filter-buttons::-webkit-scrollbar {
+        display: none;
+    }
+
+    .filter-btn {
+        flex: 0 0 auto;
+        padding: 0.5rem 0.95rem;
+        font-size: 0.78rem;
+    }
+
+    /* Grade de produtos em 2 colunas */
+    .products-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.9rem;
+    }
+
+    .product-image {
+        height: auto;
+        aspect-ratio: 3 / 4;
+    }
+
+    .category-tag {
+        top: 8px;
+        left: 8px;
+        font-size: 0.6rem;
+        padding: 0.25rem 0.55rem;
+        max-width: calc(100% - 16px);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .genero-tag {
+        display: none;
+    }
+
+    .product-info {
+        padding: 0.9rem;
+    }
+
+    .product-info h3 {
+        font-size: 0.98rem;
+        margin-bottom: 0.3rem;
+    }
+
+    .price {
+        font-size: 1.15rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .sizes {
+        gap: 0.35rem;
+        flex-wrap: wrap;
+    }
+
+    .size {
+        padding: 0.2rem 0.55rem;
+        font-size: 0.75rem;
+    }
+
+    /* Seções */
+    .about,
+    .contact,
+    .newsletter-section,
+    .owner-section,
+    .size-guide-section {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+
+    .feature {
+        padding: 1.4rem;
+    }
+
+    .owner-card {
+        padding: 1.75rem 1.25rem;
+    }
+
+    .contact-info {
+        padding: 1.5rem 1rem;
+    }
+
+    .newsletter-content h2,
+    .size-guide-content h2 {
+        font-size: 1.3rem;
+    }
+
+    .newsletter-content p {
+        margin-bottom: 1.5rem;
+    }
+
+    .size-table th,
+    .size-table td {
+        padding: 0.6rem 0.4rem;
+        font-size: 0.85rem;
+    }
+
+    /* Página do produto */
+    .product-detail {
+        padding: 1.25rem 0.75rem;
+    }
+
+    .product-detail-info {
+        padding: 1.25rem 1rem;
+    }
+
+    .product-detail-info h1 {
+        font-size: 1.45rem;
+    }
+
+    .product-detail-info .description {
+        font-size: 0.95rem;
+        margin: 1rem 0;
+    }
+
+    .observacao-section,
+    .pickup-info {
+        padding: 0.85rem;
+    }
+
+    .order-modal-content,
+    .size-guide-modal-content {
+        width: 94%;
+        padding: 1.5rem 1rem;
+        border-radius: 16px;
+    }
+
+    .order-modal-content h2,
+    .size-guide-modal-content h2 {
+        font-size: 1.2rem;
+    }
+
+    /* Botões flutuantes */
+    .whatsapp-float {
+        width: 52px;
+        height: 52px;
+        bottom: 16px;
+        left: 16px;
+    }
+
+    .whatsapp-float svg {
+        width: 26px;
+        height: 26px;
+    }
+
+    .back-to-top {
+        width: 44px;
+        height: 44px;
+        bottom: 76px;
+        left: 16px;
+    }
+
+    .back-to-top svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    footer {
+        padding: 2.25rem 1rem 1rem;
+        text-align: center;
+    }
+
+    .footer-section h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .footer-bottom {
+        font-size: 0.85rem;
     }
 }
