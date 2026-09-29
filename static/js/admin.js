@@ -344,6 +344,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
+    // Alterar senha do administrador
+    const alterarSenhaForm = document.getElementById('alterarSenhaForm');
+    if (alterarSenhaForm) {
+        alterarSenhaForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+
+            if (formData.get('nova') !== formData.get('confirmacao')) {
+                alert('A confirmação não confere com a nova senha.');
+                return;
+            }
+
+            fetch('/admin/alterar-senha', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    atual: formData.get('atual'),
+                    nova: formData.get('nova'),
+                    confirmacao: formData.get('confirmacao')
+                })
+            })
+            .then(function(response) { return response.json(); })
+            .then(function(data) {
+                if (data.success) {
+                    alert('Senha alterada com sucesso!');
+                    alterarSenhaForm.reset();
+                } else {
+                    alert(data.error || 'Erro ao alterar a senha.');
+                }
+            })
+            .catch(function(error) {
+                console.error('Erro:', error);
+                alert('Erro ao alterar a senha.');
+            });
+        });
+    }
+
     // Formulário de novo produto
     const novoProdutoForm = document.getElementById('novoProdutoForm');
     if (novoProdutoForm) {

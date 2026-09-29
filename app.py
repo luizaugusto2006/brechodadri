@@ -3,6 +3,7 @@ import os
 import json
 import secrets
 import uuid
+import hashlib
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
@@ -21,7 +22,31 @@ PRODUTOS_FILE = os.path.join(BASE_DIR, 'produtos.json')
 ORDERS_FILE = os.path.join(BASE_DIR, 'orders.json')
 
 ADMIN_USER = "admin"
-ADMIN_PASS = "brechodadri2026"
+ADMIN_PASS_PADRAO = "brechodadri2026"
+ADMIN_CONFIG_FILE = os.path.join(BASE_DIR, 'admin_config.json')
+
+def load_admin_config():
+    if not os.path.exists(ADMIN_CONFIG_FILE):
+        return {}
+    try:
+        with open(ADMIN_CONFIG_FILE, 'r', encoding='utf-8') as f:
+            return json.load(f)
+    except (ValueError, OSError):
+        return {}
+
+def hash_senha(senha, salt=None):
+    salt = salt or secrets.token_hex(16)
+    digesto = hashlib.pbkdf2_hmac('sha256', senha.encode('utf-8'), bytes.fromhex(salt), 200000)
+    return salt, digesto.hex()
+
+def senha_correta(senha):
+    config = load_admin_config()
+    salt = config.get('senha_salt')
+    esperado = config.get('senha_hash')
+    if not salt or not esperado:
+        return senha == ADMIN_PASS_PADRAO
+    _, calculado = hash_senha(senha, salt)
+    return secrets.compare_digest(calculado, esperado)
 
 def load_produtos():
     with open(PRODUTOS_FILE, 'r', encoding='utf-8') as f:
@@ -112,7 +137,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         
-        if username == ADMIN_USER and password == ADMIN_PASS:
+        if username == ADMIN_USER and senha_correta(password):
             session['logged_in'] = True
             return redirect(url_for('admin'))
         else:
@@ -140,6 +165,33 @@ def admin():
     return render_template('admin.html', categorias=categorias, categorias_ativas=categorias_ativas, 
                          produtos=produtos, subcategorias=subcategorias, tamanhos=tamanhos,
                          grupos_novos=grupos_novos)
+
+@app.route('/admin/alterar-senha', methods=['POST'])
+@login_required
+def alterar_senha():
+    data = request.get_json(force=True)
+    atual = data.get('atual', '')
+    nova = data.get('nova', '')
+    confirmacao = data.get('confirmacao', '')
+
+    if not senha_correta(atual):
+        return jsonify({'success': False, 'error': 'Senha atual incorreta'})
+    if len(nova) < 6:
+        return jsonify({'success': False, 'error': 'A nova senha precisa de pelo menos 6 caracteres'})
+    if nova != confirmacao:
+        return jsonify({'success': False, 'error': 'A confirmação não confere'})
+    if nova == atual:
+        return jsonify({'success': False, 'error': 'A nova senha é igual à atual'})
+
+    salt, digesto = hash_senha(nova)
+    with open(ADMIN_CONFIG_FILE, 'w', encoding='utf-8') as f:
+        json.dump({
+            'senha_salt': salt,
+            'senha_hash': digesto,
+            'alterada_em': datetime.now(BRT).strftime('%d/%m/%Y %H:%M')
+        }, f, ensure_ascii=False, indent=2)
+
+    return jsonify({'success': True})
 
 @app.route('/admin/salvar-categorias', methods=['POST'])
 @login_required
