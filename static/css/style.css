@@ -73,7 +73,7 @@ nav {
 
 /* Hero Section */
 .hero {
-    background: linear-gradient(rgba(194, 24, 91, 0.6), rgba(233, 30, 99, 0.7)), url('/static/imagem/01.webp');
+    background: linear-gradient(rgba(194, 24, 91, 0.6), rgba(233, 30, 99, 0.7)), url('/static/imagem/01.png');
     background-size: cover;
     background-position: center;
     height: 70vh;
